@@ -1,23 +1,53 @@
-# ignore everything in the root except the "wp-content" directory.
-!wp-content/
+##### Edit Below This Line #####
 
-# ignore everything in the "wp-content" directory, except:
-# "mu-plugins", "plugins", "themes" directory
-wp-content/*
-!wp-content/mu-plugins/
-!wp-content/plugins/
-!wp-content/themes/
+# Ignore node_modules, dist folder and composer
+wp-content/themes/chris-smith/node_modules/*
+wp-content/themes/chris-smith/vendor/*
+wp-content/themes/chris-smith/dist/*
 
-# ignore these plugins
-wp-content/plugins/hello.php
+##### DO NOT EDIT BELOW THIS LINE #####
 
-# ignore specific themes
-wp-content/themes/twenty*/
+# Ignore the config
+wp-config.php
 
-# ignore node dependency directories
-node_modules/
+# Ignore the uploads 'cause it's massive
+wp-content/uploads/*
+
+# ignore all files starting with . or ~
+.*
+~*
+# Don't ignore the gitignore or htaccess #
+!.gitignore
+!.htaccess
+
+# ignore OS generated files
+ehthumbs.db
+Thumbs.db
+
+# ignore Editor files
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
 
 # ignore log files and databases
 *.log
 *.sql
 *.sqlite
+
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
