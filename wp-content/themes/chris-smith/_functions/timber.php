@@ -41,11 +41,13 @@
       $context['site'] = $this;
       $context['options'] = get_fields('option');
       $context['primaryMenu'] = new Timber\Menu('Primary Menu');
-      // Check if the secondary nav menu location has a menu assigned to it
-      if( has_nav_menu( 'secondary' ) ) {
-        $context['secondaryMenu'] = new Timber\Menu('Secondary Menu');
-      }
       $context['footerMenu'] = new Timber\Menu('Footer Menu');
+
+      // Latest blog posts
+      $args = array( 'posts_per_page' => 6, 'post_type' => 'post', );
+      $latestPosts = Timber::get_posts( $args );
+      $context['latest_posts'] = $latestPosts;
+
       return $context;
     }
 

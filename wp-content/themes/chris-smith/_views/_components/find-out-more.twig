@@ -1,0 +1,24 @@
+
+
+<div class="w-full border-b border-gray-300">
+  <div class="container max-w-screen-lg px-0 py-10 sm:py-16 xl:py-24">
+
+    <h3 class="section-title">Find out more</h3>
+
+    <ul class="flex flex-wrap text-center -my-3 sm:-my-4 lg:-my-6 footer-menu">
+      {% for item in footerMenu.items %}
+        {% if item.name != "Contact" and item.name != "Client Login" %}
+          <li class="{{item.class}} {{ item.current ? 'current-menu-item' }} w-1/2 sm:w-1/4 p-3 sm:py-4 lg:px-5 lg:py-6 lg:my-1">
+            <a class="flex flex-col items-center text-xl lg:text-2xl leading-tight font-headings" href="{{item.link}}">{{item.name}}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="flex flex-col items-center justify-center mt-10 md:mt-12 lg:mt-20">
+      <a class="btn btn-outline--black lg:text-xl lg:px-12" href="/contact/">Check my availability</a>
+      <a class="text-sm underline mt-6" href="/private-pages/">Client login</a>
+    </div>
+
+  </div>
+</div>

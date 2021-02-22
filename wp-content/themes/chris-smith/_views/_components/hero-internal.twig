@@ -1,0 +1,36 @@
+<div class="w-full">
+
+  <div class="container pt-2 xl:px-10 2xl:py-5 flex">
+
+    <div class="hero w-full bg-center bg-cover">
+
+      {% set hero_small = post.thumbnail.src|resize('800')|default(Image(274038)) %}
+      {% set hero_medium = post.thumbnail.src|resize('1200')|default(Image(274038)) %}
+      {% set hero_large = post.thumbnail.src|resize('1900')|default(Image(274038)) %}
+      <style>
+        .hero {
+          background-image: url('{{hero_small}}');
+        }
+        @media (min-width: 800px) {
+          .hero {
+            background-image: url('{{hero_medium}}');
+          }
+        }
+        @media (min-width: 1200px) {
+          .hero {
+            background-image: url('{{hero_large}}');
+          }
+        }
+      </style>
+
+      <div class="flex justify-center py-10 sm:py-16 md:py-20 lg:py-28 2xl:py-36 4xl:py-44">
+
+        <p class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl 4xl:text-7xl font-bold font-headings">{{hero_headline}}</p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

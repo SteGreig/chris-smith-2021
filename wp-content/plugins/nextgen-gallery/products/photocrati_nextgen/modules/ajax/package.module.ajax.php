@@ -44,7 +44,7 @@ class C_Ajax_Controller extends C_MVC_Controller
             ob_end_clean();
         }
         // Return the JSON to the browser
-        echo json_encode($retval);
+        wp_send_json($retval);
     }
     /**
      * Returns an instance of this class
@@ -59,19 +59,11 @@ class C_Ajax_Controller extends C_MVC_Controller
         }
         return self::$_instances[$context];
     }
-    function validate_ajax_request($action = NULL, $check_token = false)
+    function validate_ajax_request($action = NULL, $token = FALSE)
     {
-        // TODO: remove this. Pro 2.1's proofing calls validate_ajax_request() with a null $action
-        if (!$action) {
-            return TRUE;
+        if ($token === TRUE && (!isset($_REQUEST['nonce']) || !M_Security::verify_nonce($_REQUEST['nonce'], $action))) {
+            return FALSE;
         }
-        $valid_request = false;
-        $security = $this->get_registry()->get_utility('I_Security_Manager');
-        $sec_actor = $security->get_current_actor();
-        $sec_token = $security->get_request_token($action);
-        if ($sec_actor->is_allowed($action) && (!$check_token || $sec_token->check_current_request())) {
-            $valid_request = true;
-        }
-        return $valid_request;
+        return M_Security::is_allowed($action);
     }
 }

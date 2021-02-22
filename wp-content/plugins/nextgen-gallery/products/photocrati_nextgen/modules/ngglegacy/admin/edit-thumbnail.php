@@ -142,7 +142,7 @@ if ($thumbnail_crop_frame != null)
 					
 					jQuery('#thumbMsg').html("<?php _e('Thumbnail updated', 'nggallery') ?>");
 					jQuery('#thumbMsg').css({'display':'block'});
-					setTimeout(function(){ jQuery('#thumbMsg').fadeOut('slow'); }, 1500);
+					setTimeout(function(){ jQuery('#thumbMsg').html(''); }, 1500);
 			},
 		  error: function() {
 		  			jQuery('#thumbMsg').html("<?php _e('Error updating thumbnail', 'nggallery') ?>");
@@ -177,19 +177,19 @@ if ($thumbnail_crop_frame != null)
 	</tr>
 </table>
 <div id="ngg-overlay-dialog-bottom">
+    <div id="thumbMsg"></div>
 	<input type="button" name="update" value="<?php esc_attr_e('Update', 'nggallery'); ?>" onclick="updateThumb()" class="button-secondary" />
-	<div id="thumbMsg" ></div>
 </div>
 
 <script type="text/javascript">
-//<![CDATA[
-	jQuery(document).ready(function(){
-		jQuery('#imageToEdit').Jcrop({
-			onChange: showPreview,
-			onSelect: showPreview,
-			<?php echo $default_crop_js_parameter; ?>
-			aspectRatio: <?php echo str_replace(',', '.', round($WidthHtmlPrev/$HeightHtmlPrev, 3)); ?>
-		});
-	});
-//]]>
+    (function($) {
+        $(function() {
+            jQuery('#imageToEdit').Jcrop({
+                onChange: showPreview,
+                onSelect: showPreview,
+                <?php echo $default_crop_js_parameter; ?>
+                aspectRatio: <?php echo str_replace(',', '.', round($WidthHtmlPrev / $HeightHtmlPrev, 3)); ?>
+            });
+        });
+    })(jQuery);
 </script>

@@ -16,7 +16,7 @@ class M_Third_Party_Compat extends C_Base_Module
             'photocrati-third_party_compat',
             'Third Party Compatibility',
             "Adds Third party compatibility hacks, adjustments, and modifications",
-            '3.1.4.2',
+            '3.1.11.1',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com'
@@ -91,6 +91,12 @@ class M_Third_Party_Compat extends C_Base_Module
             if (!defined('NGG_DISABLE_FILTER_THE_CONTENT')) define('NGG_DISABLE_FILTER_THE_CONTENT', TRUE);
             if (!defined('NGG_DISABLE_RESOURCE_MANAGER'))   define('NGG_DISABLE_RESOURCE_MANAGER', TRUE);
         }
+
+        // Elementor's graphical builder is broken by our resource manager
+        if (defined('ELEMENTOR_VERSION'))
+        {
+            if (!defined('NGG_DISABLE_RESOURCE_MANAGER')) define('NGG_DISABLE_RESOURCE_MANAGER', TRUE);
+        }
     }
 
     function _register_adapters()
@@ -102,9 +108,10 @@ class M_Third_Party_Compat extends C_Base_Module
 
     function _register_hooks()
     {
-        add_action('init', array(&$this, 'colorbox'),   PHP_INT_MAX);
-        add_action('init', array(&$this, 'flattr'),     PHP_INT_MAX);
-        add_action('wp',   array(&$this, 'bjlazyload'), PHP_INT_MAX);
+        add_action('init', array($this, 'divi'),       10);
+        add_action('init', array($this, 'colorbox'),   PHP_INT_MAX);
+        add_action('init', array($this, 'flattr'),     PHP_INT_MAX);
+        add_action('wp',   array($this, 'bjlazyload'), PHP_INT_MAX);
 
         add_action('admin_init', array($this, 'excellent_themes_admin'), -10);
 
@@ -137,6 +144,14 @@ class M_Third_Party_Compat extends C_Base_Module
 
         // TODO: Only needed for NGG Pro 1.0.10 and lower
         add_action('the_post', array(&$this, 'add_ngg_pro_page_parameter'));
+    }
+
+    public function divi()
+    {
+        // Divi / Divi Booster loads its own Iris JS under the 'iris' ID, but because NextGen has already
+        // registered the default /wp-admin/js/iris.js we effectively break their admin color selector
+        if (function_exists('et_divi_load_unminified_scripts') && !empty($_GET['et_fb']))
+            wp_deregister_script('iris');
     }
 
     function is_ngg_page()

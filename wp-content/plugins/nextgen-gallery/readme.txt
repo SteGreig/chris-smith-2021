@@ -1,12 +1,13 @@
 === WordPress Gallery Plugin - NextGEN Gallery ===
 Contributors: photocrati, imagely
 Tags: wordpress gallery plugin, gallery, nextgen, nextgen gallery, photo gallery, image gallery, photography, slideshow, images, photo, photo album, watermark
-Requires at least: 4.0.0
-Stable tag: 3.1.7
-Tested up to: 5.1.0
-License: GPLv2
+Requires at least: 5.4.0
+Stable tag: 3.7.0
+Tested up to: 5.6.1
+License: GPLv3
+Requires PHP: 5.6
 
-The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 24 million downloads.
+The most popular WordPress gallery plugin and one of the most popular plugins of all time with over 31 million downloads.
 
 == Description ==
 
@@ -16,42 +17,42 @@ NextGEN Gallery has been the industry's standard **WordPress gallery plugin** si
 
 On the back end, NextGEN offers a complete WordPress gallery management system with the ability to batch upload photos, import meta data, add/delete/rearrange/sort photos, edit thumbnails, group galleries into albums, and more.
 
-On the front end, the free version of NextGEN provides two main gallery styles (slideshows and thumbnail galleries) and two album styles (compact and extended), all of which come with a wide array of options for controlling size, style, timing, transitions, controls, lightbox effects, and more. Learn more about <a href="https://www.imagely.com/wordpress-gallery-plugin/" target="_blank">NextGEN WordPress Gallery Plugin features.</a>
+On the front end, the free version of NextGEN provides three main gallery styles (slideshow, thumbnail, and imagebrowser galleries) and two album styles (compact and extended), all of which come with a wide array of options for controlling size, style, timing, transitions, controls, lightbox effects, and more. Learn more about <a href="https://www.imagely.com/wordpress-gallery-plugin/" target="_blank">NextGEN WordPress Gallery Plugin features.</a>
 
-https://www.youtube.com/embed/mNEnY23i9DE
+The best gets better with full support for the Gutenberg block editor. Now you can add a gallery or album anywhere on your site, with a page builder type feel directly in the WordPress editor.
+
+https://www.youtube.com/embed/4Phvmm3etnw
 
 **NEXTGEN GALLERY DEMOS**<br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/basic-thumbnail-gallery/" target="_blank">Basic Thumbnail Gallery</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/basic-slideshow-gallery/" target="_blank">Basic Slideshow Gallery</a><br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/basic-imagebrowser-gallery/" target="_blank">Basic Imagebrowser Gallery</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/basic-compact-album/" target="_blank">Basic Compact Album</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/basic-extended-album/" target="_blank">Basic List Album</a><br>
 
 **INTRODUCING NEXTGEN GALLERY PRO.** NextGEN Plus and NextGEN Pro are premium WordPress gallery plugin extensions for NextGEN Gallery that add new photo gallery displays, lightboxes, ecommerce, proofing, and pro support. Learn more about <a href="https://www.imagely.com/wordpress-gallery-plugin/" target="_blank">NextGEN Plus and NextGEN Pro photo plugin features.</a>
 
-https://www.youtube.com/embed/zmA-b_jiXN0
+https://www.youtube.com/embed/ePnYGQX0Lf8
 
 **NEXTGEN PRO DEMOS**<br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-ecommerce-demo/" target="_blank">Photo Print Sales</a><br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-proofing-demo/" target="_blank">Photo Proofing</a><br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/digital-download-demo/" target="_blank">Digital Downloads</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-mosaic-gallery/" target="_blank">Pro Mosaic Gallery</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-masonry-gallery/" target="_blank">Pro Masonry Gallery</a><br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-tiled-gallery/" target="_blank">Pro Tiled Gallery</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-filmstrip-gallery/" target="_blank">Pro Filmstrip Gallery</a><br>
 *<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-film-gallery/" target="_blank">Pro Film Gallery</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-slideshow-gallery/" target="_blank">Pro Slideshow Gallery</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-thumbnail-gallery/" target="_blank">Pro Thumbnail Gallery</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-blogstyle-gallery/" target="_blank">Pro Blog Style Gallery</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-grid-album/" target="_blank">Pro Grid Albums</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-list-album/" target="_blank">Pro List Album</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-lightbox-demo/" target="_blank">Pro Lightbox Demo</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-proofing-demo/" target="_blank">Pro Proofing Demo</a><br>
-*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-ecommerce-demo/" target="_blank">Pro Ecommerce Demo</a><br>
+*<a href="https://www.imagely.com/wordpress-gallery-plugin/pro-lightbox-demo/" target="_blank">Pro Lightbox</a><br>
 
 = About Imagely =
 
-NextGEN Gallery is maintained by Imagely. We're the WordPress photography experts. In addition to NextGEN Gallery, NextGEN Plus, and NextGEN Pro, we also make WordPress themes for photographers, provide turnkey websites for photographers, and run the WordPress Photography Podcast.
+NextGEN Gallery is a WordPress gallery plugin maintained by Imagely. We're the WordPress photography experts. In addition to NextGEN Gallery, NextGEN Plus, and NextGEN Pro, we also make WordPress themes for photographers, provide turnkey websites for photographers, and run the WordPress Photography Podcast.
 
 Learn more or connect with us:<br>
 *<a href="https://www.imagely.com/" target="_blank">Imagely Website</a><br>
-*<a href="https://www.imagely.com/wordpress-photography-themes/" target="_blank">Genesis WordPress Themes for Photographers</a><br>
-*<a href="https://www.imagely.com/hosting/" target="_blank">Managed WordPress Hosting for Photographers</a><br>
+*<a href="https://www.imagely.com/wordpress-photography-themes/" target="_blank">WordPress Themes for Photographers</a><br>
+*<a href="https://www.imagely.com/sites/" target="_blank">Turnkey Photography Sites</a><br>
 *<a href="https://www.imagely.com/podcast/" target="_blank">The WordPress Photography Podcast</a><br>
 *<a href="https://www.imagely.com/docs/nextgen-gallery/" target="_blank">NextGEN Gallery Documentation</a><br>
 *<a href="https://twitter.com/imagely" target="_blank">Imagely on Twitter</a><br>
@@ -65,33 +66,28 @@ Imagely 2016-2019
 Photocrati Media 2012-2016<br>
 Alex Rabe 2007-2011
 
-This program is free software. You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+This program is free software released under the terms of the GNU General Public License.
 
 == Installation ==
 
 INSTALLATION: The easiest way to start uploading your photos is to login to you WordPress dashboard, go to Plugins > Add New, search for NextGEN Gallery, and click to install the plugin. You can also download the plugin zip file from this page and upload it from the Plugins > Add New > Upload page.
 
-HOW TO USE: Just go to a page or post and click the NextGEN Gallery icon or the Add Gallery button. From our Insert Gallery Window, you can create, manage, customize, and display your WordPress photo galleries. You can also manage your photo galleries and gallery settings from the central options area under the "Gallery" tab on your dashboard menu.
+HOW TO USE: Just go to a page or post and add a NextGEN Gallery block. Within the block, click the Add Gallery button to open our Insert Gallery Window, where you can create, manage, customize, and display your WordPress photo galleries. You can also manage your photo galleries and gallery settings from the central options area under the "Gallery" tab on your dashboard menu.
 
 DOCUMENTATION: See <a href="https://www.imagely.com/docs/nextgen-gallery/" target="_blank">NextGEN Gallery Documentation</a>.
 
 That's it ... have fun! For more information, feel free to visit the official website for the NextGEN Gallery <a href="https://www.imagely.com/wordpress-gallery-plugin" target="_blank">WordPress Gallery Plugin</a>.
 
-https://www.youtube.com/watch?v=qwNr5ZNGavo
-
 == Screenshots ==
 
 1. Thumbnail Gallery
 2. Slideshow Gallery
-3. Manage Gallery Page
-4. Insert Gallery Window
-5. Gallery Settings Page
+3. Imagebrowser Gallery
+4. Manage Gallery Page
+5. Insert Gallery Window
+6. Gallery Settings Page
 
-== Shortcode ==
+== Shortcodes ==
 
 NextGEN Gallery offers an easy-to-use Insert Gallery Window, which means you never need to work with shortcodes again when inserting and manageing galleries - if you would prefer not too.
 
@@ -123,7 +119,7 @@ Nope, we use no flash elements.
 
 = Are the galleries mobile friendly? =
 
-Yes, we've put a lot of work into this and, NextGEN Galleries are compatible with Android, iOS. All photo galleries are also responsive, so galleries look good on diverse screen sizes. NextGEN Pro also includes a full screen, responsive Pro Lightbox with mobile gesture support. It's great for viewing photos on mobile devices.
+Yes, we've put a lot of work into this and, NextGEN Galleries are compatible with phones and tablets, inluding Android and iOS operating systems. All photo galleries are also responsive, so galleries look good on diverse screen sizes. NextGEN Pro also includes a full screen, responsive Pro Lightbox with mobile gesture support. It's great for viewing photos on mobile devices.
 
 
 = What is the difference between a gallery and an album? =
@@ -182,6 +178,223 @@ For more information, feel free to visit the official website for the NextGEN Ga
 
 
 == Changelog ==
+
+= V3.7.0 - 02.17.2020 =
+* Fixed:   Added ellipsis to pagination to show pages skipped (1099) (1157)
+* Fixed:   Deleted images could still appear in 'random' image galleries (1129)
+* Fixed:   Galleries with only one page were causing pagination links to appear (1156)
+* Fixed:   Inability to change gallerypath on multisite networks (1150)
+* Fixed:   Overriding static resources (CSS & JS) through files in wp-content/ngg/ was not working (1144)
+
+= V3.6.0 - 02.10.2020 =
+* NEW:     Added new 'Bulk actions' option to remove EXIF Orientation from existing images (1137)
+* NEW:     Allow maximum_entity_limit display setting regardless of source (1146)
+* NEW:     Provide hooks to customize Uppy settings (1139)
+* NEW:     Recreated legacy templates as modern "views" (1127)
+* Fixed:   A compatibility warning with NextGEN Plus would appear when users had NextGEN Starter (1097)
+* Fixed:   Compatibility issue with Topscorer Theme (344171)
+* Fixed:   Compatibility with Custom Post Types UI (1076)
+* Fixed:   Compatibility with jQuery.mmenu (1140)
+* Fixed:   Disable marketing additions for users with NextGEN Starter enabled
+* Fixed:   Error responses from the server when uploading images failed were not specific (1121)
+* Fixed:   Image rotation not reliable (1137)
+* Fixed:   Imagebrowser pagination broke on images with UTF8 characters in their title (1135)
+* Fixed:   Shortcodes displaying albums did not appear in the order listed (1128)
+* Fixed:   Transient tracker was calling update_option() on every page (1074)
+
+= v3.5.0 - 12.17.2020 =
+* Changed: Deprecated legacy template functionality
+* Changed: Deprecated built-in custom style / CSS mechanism
+* Fixed:   Misc updates for PHP 8.0 compatibility
+
+= v3.4.7 - 11.25.2020 =
+* NEW:     Replaced plupload with a new uppy.js based uploader for faster uploading
+* Changed: Updated select2 and Gritter to the latest versions
+* Changed: Several changes have been made for future jQuery 3.5 compatibility
+* Fixed:   Gutenberg Block and Featured Image features on wordpress.com hosting
+
+= V3.3.20 - 10.13.2020 =
+* NEW:     PHP 5.6 is the minimum supported PHP version
+* NEW:     WordPress 5.2 is the minimum support PHP version
+* Fixed:   Block disappearing in Block Editor
+* Fixed:   Gutenberg block and featured image features were broken on wordpress.com hosting
+* Note:    NextGEN Gallery will soon be licensed under GPLv3.
+
+= V3.3.17.1 - 09.03.2020 =
+* Fixed:   Gutenberg block and featured image features were broken on wordpress.com hosting
+
+= V3.3.17 - 08.18.2020 =
+* Fixed:   Override Thumbnail Settings not configurable
+* Fixed:   Broken gallery displays in WP 5.5 with Classic Editor
+* Fixed:   HTML in Gallery & Image fields
+* Fixed:   Inability to save Gallery Settings or Other Options
+
+= V3.3.11 - 08.14.2020 =
+* Fixed:   Fancybox lightbox not working with WordPress 5.5
+* Fixed:   Inability to upload images or create galleries in WordPress 5.5
+* Fixed:   Cannot crop images from Manage Galleries page
+* Fixed:   Removed use of jquery.size() and jquery.browser
+* Fixed:   Fixed iterator_to_array() PHP warning
+
+= V3.3.10 - 08.12.2020 =
+* NEW:     Added filter 'ngg_recent_images_sort_by_column' to control how recent images are sorted
+* Fixed:   Assigning a thumbnail to a custom post type page/post caused a fatal javsacript error
+* Fixed:   NextGEN would previously be completely unusable should it even once determine that it doesn't have the necessary roles it needs
+* Fixed:   Several SimpleLightbox issues caused by a recent version upgrade
+* Changed: Admin user interface modifications
+* Changed: Misc code improvements to take advantage of PHP 5.3+ features
+* Changed: Removed NGG_FIX_JQUERY constant
+
+= V3.3.6 - 06.24.2020 =
+* NEW:     Added a mechanism in Other Options > Misc to update page featured images assigned with NextGen version 1 that were broken by a WordPress 5.4 API change
+* NEW:     Added two filters (ngg_default_settings and ngg_default_global_settings) to allow control over default settings for new networks, sites and sub-sites
+* NEW:     Updated SimpleLightbox to the latest version. This fixes all gallery images appearing in the lightbox if more than one gallery was on the page.
+* Fixed:   Album routing was broken if the albums were named using a non-latin alphabet
+* Fixed:   Gallery path validation was broken on some IIS servers
+* Fixed:   NextGen was unable to serve AJAX requests on home.pl hosting
+* Fixed:   Removed the unused simple_html_dom module which was causing errors with PHP 7.3
+
+= V3.3.5 - 04.09.2020 =
+* Fixed:   Broken dynamic images
+
+= V3.3.2 - 04.07.2020 =
+* Fixed:   Gallery paths were calculated incorrectly on wordpress.com hosting
+* Fixed:   Insert Gallery Window could not edit an existing displayed gallery with a legacy template without breaking the displayed gallery
+* Fixed:   Manage Albums page could generate lengthy PHP warnings if galleries or other albums did not have a preview image assigned
+* Fixed:   NextGen was forcing the 'screen_options_show_screen' filter to always be true
+* Fixed:   Plugin would not load and would throw an error due to C_Component_Registry not being found
+* Fixed:   Removed last traces of javascript that were in display type templates
+
+= V3.3.0 - 03.10.2020 =
+* NEW:     Added feature on Manage Galleries page to search gallery names
+* NEW:     Added filter 'ngg_disable_shortcodes_in_request_api' to disable rendering of NextGen shortcodes in REST
+* NEW:     Added option to automatically watermark images during upload
+* Changed: Minimum PHP version supported is now 5.4
+* Changed: Pope framework now included via Composer
+* Changed: Removed use of 'contextual_help' filter which is deprecated
+* Changed: Renamed nggallery.po to nggallery.pot for better compatibility with Loco Translate
+* Fixed:   Compatibility with Divi Booster
+* Fixed:   Copying images to another gallery caused a PHP warning
+* Fixed:   Featured Image feature was not working
+* Fixed:   Fixed PHP warning sometimes displayed with album breadcrumbs
+* Fixed:   Fixed PHP warning when displaying certain albums
+* Fixed:   No notification was given when moving or copying images on Manage Gallery
+* Fixed:   PHP warning would be displayed when MediaRSS feature was enabled
+* Fixed:   SimpleLightbox would not use image alttext attribute for titles
+* Fixed:   Uploading zip files containing images with uppercase file extensions would fail to extract any images
+* Fixed:   Uploading images with invalid EXIF would reject the image entirely
+
+= V3.2.23 - 12.02.2019 =
+* NEW:     There is a new setting under Other Options > Misc to disable enqueueing FontAwesome entirely
+* Changed: WP-CLI commands have been namespaced and numerous new commands have been added
+* Fixed:   Add Gallery / Images page would instruct users to upload zip files even if the multisite settings disallowed it
+* Fixed:   Conflict with Elementor breaking the Attach-To-Post window styling
+* Fixed:   Corrected PHP warnings generated when creating the template & static override directory ('ngg') inside WP_CONTENT_DIR if write access isn't available
+* Fixed:   Gallery slug generation was broken when the gallery name included special characters and broke those galleries as album children
+* Fixed:   Improved performance on Manage Galleries page by simplifying query to count images belonging to galleries
+* Fixed:   Manage Galleries could generate a PHP warning when listing galleries created by users that have since been deleted
+* Fixed:   Shutter Reloaded's navigation icons were always missing
+* Fixed:   Slideshow widget was enqueueing a file that no exists
+* Fixed:   Two basic slideshow displays on one page would cause a JS error that broke their display
+* Fixed:   URL resolution for paginated galleries and dynamic thumbnails was broken if WordPress was in a sub-directory of a sub-directory install (split home & site url)
+
+= V3.2.21 - 11.20.2019 =
+* Changed: Small branding and color update
+
+= V3.2.19 - 10.30.2019 =
+* Fixed:   Conflict with Imagify and the Imagely Lightroom plugin
+* Fixed:   Ability to update image metadata from the Imagely Lightroom plugin
+
+= V3.2.18 - 09.18.2019 =
+* Fixed:   Ability to sort images by random
+* Fixed:   Large images failed to upload on WP Engine
+* Fixed:   Plupload translations not working
+
+= V3.2.15 - 09.10.2019 =
+* NEW:     Automatically retry loading dynamic thumbnail generation urls
+* NEW:     Use NGG_DISABLE_DYNAMIC_IMG_URLS constant to generate images in-process
+* Changed: Dynamic thumbnails are generated in their own PHP processes/url
+* Fixed:   Distorted images and thumbnails
+* Fixed:   Timeout when viewing large galleries
+* Fixed:   Memory optimizations when generating images
+
+= V3.2.11 - 08.27.2019 =
+Secured: IGW queries (reported by Tin Duong of Fortinet's FortiGuard Labs)
+
+= V3.2.10 - 07.23.2019 =
+* Changed: Updated branding for Freemius opt-in
+* Fixed:   IGW queries
+
+= V3.2.8 - 07.16.2019 =
+* NEW:     Added support for the shortcode_atts_ngg filter
+* NEW:     Importing images from a folder now works recursively
+* Fixed:   'Scan folder for new images' did not assign a gallery preview image
+* Fixed:   AJAX actions like image uploads were failing if the default request to '/' went to an index.html instead of index.php
+* Fixed:   Admin page controllers / templates were running twice
+* Fixed:   Compatibility with Delightful Downloads
+* Fixed:   Compatibility with Elementor
+* Fixed:   Copying images to the Media Library was broken if the server lacked the fileinfo extension
+* Fixed:   Disable Manage Gallery's move/copy images submit button to prevent multiple submissions
+* Fixed:   Made 'Recover image from backup' reset thumbnail crop settings
+* Fixed:   Minor error emitted from common.js
+* Fixed:   Move Images / Copy Images now also moves/copies dynamically generated versions
+* Fixed:   The uninstall routine handler was generating a PHP warning accessing an undeclared variable
+* Fixed:   Zip uploads from some macOS users was failing
+
+= V3.2.4 - 06.04.2019 =
+* NEW:     Added some methods to the window.galleries object prototype for retrieving display settings
+* Secured: Zip extraction process (thanks to Slavco Mihajloski / @mslavco)
+* Changed: Removed the now-deprecated 'publish' link from the Manage Gallery image actions row
+* Fixed:   A PHP warning emitted on Gallery > Other Options if the current gallery path cannot be written to
+* Fixed:   Added compatibility check for the official FontAwesome plugin
+* Fixed:   Clicking a checkbox in the Insert Gallery Window's "Sort or exclude images" tab was not functioning
+* Fixed:   Resized images were becoming larger than the original in some circumstances
+* Fixed:   URL to static assets like JS and CSS files was incorrect when NextGen Gallery was a symlink
+
+= V3.2.2 - 05.09.2019 =
+* Changed: Updated video Links
+* Changed: Branding updates in Readme.txt file
+
+= V3.2.1 - 05.08.2019 =
+* Fixed:   Missing settings after Reset with NextGEN Plus
+* Fixed:   Small styling issues with WordPress 5.2
+
+= V3.2.0 - 05.07.2019 =
+* NEW:     Branding update
+* NEW:     API methods for detecting NextGEN provided pages and custom post types
+* Fixed:   Missing menus after Reset
+* Fixed:   Ajax pagination with Simplelightbox
+* Fixed:   Datamapper query cache not purged after saving an entity
+* Fixed:   Gallery folder not created when using Manage Galleries -> New Gallery
+* Fixed:   Notifications not appearing on all Nextgen-provided pages
+* Fixed:   Gallery wizard conflicting with NextGEN Pro ecommerce wizard
+* Fixed:   Upgrade to pro button
+* Fixed:   NGG activation transient not given a time-to-live value
+
+= V3.1.17 - 04.02.2019 =
+* Fixed:   Preview images for display types giving get_static_abspath error
+* Fixed:   Compatibility with the Imagely Lightroom plugin
+
+= V3.1.14 - 03.26.2019 =
+* Changed: Restored original behavior of ngg_after_new_images_added hook
+* Changed: Images with EXIF rotation metadata are now rotated automatically at upload
+* Changed: Moved confirmation message presented after editing a thumbnail
+* Fixed:   Ability to import zips of images
+* Fixed:   Gallery folder not created on filesystem after adding new gallery
+* Fixed:   IGW not working with Gutenberg / Block Editor
+* Fixed:   Compatibility with EWWW Image Optimizer
+* Fixed:   Compatibility with Elementor
+* Fixed:   Compatibility with Imagify
+* Fixed:   NextGen 3.1.11 passed an incorrect path to load_plugin_textdomain()
+* Fixed:   Simplelightbox initialization was opening more than once for certain images
+
+= V3.1.11 - 03.020.2019 =
+* NEW:     Many performance enhancements
+* Fixed:   Broken Overview page on WordPress 5.1
+* Fixed:   Problem with notices not being dismissible
+* Fixed:   Recover images from backup generating errors
+* Fixed:   Manage Tags the only menu option after activating
+* Fixed:   Compatibility with environments which don't have mime_content_type function
 
 = V3.1.7 - 02.26.2019 =
 * Changed: Upgraded Freemius SDK to latest release

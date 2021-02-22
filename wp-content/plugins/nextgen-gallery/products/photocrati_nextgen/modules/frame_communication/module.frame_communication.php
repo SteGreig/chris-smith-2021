@@ -22,7 +22,7 @@ class M_Frame_Communication extends C_Base_Module
 			'photocrati-frame_communication',
 			'Frame/iFrame Inter-Communication',
 			'Provides a means for HTML frames to share server-side events with each other',
-			'3.0.0',
+			'3.3.21',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com',
@@ -47,9 +47,13 @@ class M_Frame_Communication extends C_Base_Module
 	function _register_hooks()
 	{
 		add_action('init', array($this, 'register_script'));
-		add_filter('ngg_admin_script_handles', array($this, 'add_script_to_ngg_pages'));
-		add_action('ngg_enqueue_frame_event_publisher_script', array($this, 'enqueue_script'));
-	}
+        add_filter('ngg_admin_script_handles', array($this, 'add_script_to_ngg_pages'));
+        add_action('ngg_enqueue_frame_event_publisher_script', array($this, 'enqueue_script'));
+
+        // Elementor's editor.php runs `new \WP_Scripts()` which requires we register scripts on both init and this
+        // action if we want the attach-to-post code to function (which relies on frame_event_publisher)
+        add_action('elementor/editor/before_enqueue_scripts', array($this, 'register_script'));
+    }
 
 	function add_script_to_ngg_pages($scripts)
 	{

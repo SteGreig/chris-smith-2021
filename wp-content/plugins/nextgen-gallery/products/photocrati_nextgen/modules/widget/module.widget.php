@@ -17,7 +17,7 @@ class M_Widget extends C_Base_Module
             'photocrati-widget',
             'Widget',
             'Handles clearing of NextGen Widgets',
-            '3.1.6',
+            '3.3.21',
             'https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/',
             'Imagely',
             'https://www.imagely.com'
@@ -38,6 +38,10 @@ class M_Widget extends C_Base_Module
     function _register_hooks()
     {
     	add_action('widgets_init', array($this, 'register_widgets'));
+
+    	add_action('ngg_delete_image', function() {
+            C_Photocrati_Transient_Manager::flush('random_widget_gallery_ids');
+        });
     }
 
     function register_widgets()

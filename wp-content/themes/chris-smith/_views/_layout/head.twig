@@ -9,6 +9,9 @@
 
 		{% block htmlheader %}
 
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Bodoni+Moda:wght@400;700&display=swap" rel="stylesheet">
+
 			{% if (site.url == "http://localhost:3000" or site.url == "http://chris-smith-2021.vm") %}
 				<link rel="stylesheet" href="{{ theme.link ~ '/dist/main.min.css' }}">
 			{% else %}
@@ -32,21 +35,11 @@
 
 <body>
 
-{# Set up a new mobile menu  #}
-{% set mobileMenu = primaryMenu.items %}
-
-{# Get the secondary menu items and set it to a new topMenu var #}
-{% set topMenu = secondaryMenu.items %}
-
-{# See if topMenu has content - if so, merge it into the mobileMenu #}
-{% if topMenu | default(false) %}
-	{% set mobileMenu = mobileMenu|merge(topMenu) %}
-{% endif %}
 
   <nav class="mob-nav">
     <div class="scroll-container">
       <ul class="">
-        {% for item in mobileMenu %}
+        {% for item in footerMenu.items %}
           <li class="{{item.class}} {{ item.current ? 'current-menu-item' }}">
             <a href="{{item.link}}">{{item.name}}</a>
             {% if item.children %}
@@ -66,4 +59,4 @@
 
   <div class="wrapper">
 
-      {% include "_components/mobile-top-bar.twig" %}
+      {# {% include "_components/mobile-top-bar.twig" %} #}

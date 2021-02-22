@@ -124,21 +124,6 @@ add_action('init', function() {
             'icon_url' 		=> 'dashicons-hammer',
             'redirect' 		=> false
         ]);
-
-        $marketing_page = acf_add_options_page([
-            'page_title' 	=> 'Marketing',
-            'menu_title' 	=> 'Marketing',
-            'menu_slug' 	=> 'marketing',
-            'position' 		=> 75,
-            'capability' 	=> 'update_core',
-            'icon_url' 		=> 'dashicons-randomize',
-            'redirect' 		=> false
-        ]);
-    }
-
-    if (function_exists('acf_add_local_field_group')) {
-        include_once __DIR__ . '/includes/acf/options-site.php';
-        include_once __DIR__ . '/includes/acf/options-marketing.php';
     }
 });
 

@@ -1,0 +1,21 @@
+{% if posts.pagination %}
+  <div class="w-full flex flex-wrap justify-center items-center px-8 pt-10 pb-16 sm:pt-16 sm:pb-24 xl:pt-20 xl:pb-32 border-b border-gray-300">
+    {% if posts.pagination.prev %}
+      <a href="{{posts.pagination.prev.link}}" class="prev md:mr-4 underline text-sm {{posts.pagination.prev.link|length ? '' : 'invisible'}}">Prev</a>
+      {% endif %}
+      <ul class="inline-flex flex-wrap justify-center">
+        {% for page in posts.pagination.pages %}
+        <li class="flex">
+          {% if page.link %}
+          <a href="{{page.link}}" class="{{page.class}} font-headings font-bold text-sm border border-black text-white block px-3 py-1 m-1 bg-black hover:bg-gray-700">{{page.title}}</a>
+          {% else %}
+          <span class="{{page.class}} {{'current' in page.class ? 'bg-white text-black' : 'text-white  bg-black hover:bg-gray-700'}} block px-3 py-1 m-1 border border-black text-sm font-bold font-headings">{{page.title}}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% if posts.pagination.next %}
+      <a href="{{posts.pagination.next.link}}" class="next md:ml-4 underline text-sm {{posts.pagination.next.link|length ? '' : 'invisible'}}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}

@@ -12,7 +12,8 @@ module.exports = {
       "4xl": "1900px",
     },
     fontFamily: {
-      sans: ["Source Sans Pro", "sans-serif"],
+      serif: ["Baskervville", "serif"],
+      headings: ["Bodoni Moda", "serif"],
     },
     filter: {
       none: "none",
@@ -21,15 +22,10 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          light: "#eee",
-          DEFAULT: "#ccc",
-          dark: "#666",
-        },
-        secondary: {
-          light: "#f83",
-          DEFAULT: "#d0dfe5",
-          dark: "#c0ced3",
-        },
+          light: "#818181",
+          DEFAULT: "#303030",
+          dark: "#000",
+        }
       },
       spacing: {
         72: "18rem",

@@ -317,6 +317,17 @@ class Mixin_Display_Type_Controller extends Mixin
     {
         // This script provides common JavaScript among all display types
         wp_enqueue_script('ngg_common');
+        wp_add_inline_script('ngg_common', '
+            var nggLastTimeoutVal = 1000;
+
+			var nggRetryFailedImage = function(img) {
+				setTimeout(function(){
+					img.src = img.src;
+				}, nggLastTimeoutVal);
+			
+				nggLastTimeoutVal += 500;
+			}
+        ');
         // Enqueue the display type library
         wp_enqueue_script($displayed_gallery->display_type, $this->object->_get_js_lib_url($displayed_gallery), array(), NGG_SCRIPT_VERSION);
         // Add "galleries = {};"
@@ -564,26 +575,19 @@ class Mixin_Display_Type_Controller extends Mixin
             $fs = C_Fs::get_instance();
             /* Fetch array of template directories */
             $dirs = M_Gallery_Display::get_display_type_view_dirs($display_type_name);
-            // If the view starts with a slash, we assume that a filename has been given
-            if (strpos($display_type_view, DIRECTORY_SEPARATOR) === 0) {
-                if (@file_exists($display_type_view)) {
-                    $template = $display_type_view;
-                }
-            } else {
-                // Add the missing "default" category name prefix to the template to make it
-                // more consistent to evaluate
-                if (strpos($display_type_view, DIRECTORY_SEPARATOR) === FALSE) {
-                    $display_type_view = join(DIRECTORY_SEPARATOR, array('default', $display_type_view));
-                }
-                foreach ($dirs as $category => $dir) {
-                    $category = preg_quote($category . DIRECTORY_SEPARATOR);
-                    if (preg_match("#^{$category}(.*)\$#", $display_type_view, $match)) {
-                        $display_type_view = $match[1];
-                        $template_abspath = $fs->join_paths($dir, $display_type_view);
-                        if (@file_exists($template_abspath)) {
-                            $template = $template_abspath;
-                            break;
-                        }
+            // Add the missing "default" category name prefix to the template to make it
+            // more consistent to evaluate
+            if (strpos($display_type_view, DIRECTORY_SEPARATOR) === FALSE) {
+                $display_type_view = join(DIRECTORY_SEPARATOR, array('default', $display_type_view));
+            }
+            foreach ($dirs as $category => $dir) {
+                $category = preg_quote($category . DIRECTORY_SEPARATOR);
+                if (preg_match("#^{$category}(.*)\$#", $display_type_view, $match)) {
+                    $display_type_view = $match[1];
+                    $template_abspath = $fs->join_paths($dir, $display_type_view);
+                    if (@file_exists($template_abspath)) {
+                        $template = $template_abspath;
+                        break;
                     }
                 }
             }
@@ -794,8 +798,8 @@ class Mixin_Displayed_Gallery_Validation extends Mixin
                     $this->object->add_error(__('Source not compatible with selected display type', 'nggallery'), 'display_type');
                 }
             }
-            // Allow ONLY recent & random galleries to have their own maximum_entity_count
-            if (!empty($this->object->display_settings['maximum_entity_count']) && in_array($this->object->source, array('random_images', 'recent_images', 'random', 'recent'))) {
+            // Only some sources should have their own maximum_entity_count
+            if (!empty($this->object->display_settings['maximum_entity_count']) && in_array($this->object->source, array('tag', 'tags', 'random_images', 'recent_images', 'random', 'recent'))) {
                 $this->object->maximum_entity_count = $this->object->display_settings['maximum_entity_count'];
             }
             // If no maximum_entity_count has been given, then set a maximum
@@ -848,11 +852,20 @@ class Mixin_Displayed_Gallery_Queries extends Mixin
     {
         // TODO: This method is very long, and therefore more difficult to read
         // Find a way to minimalize or segment
+        $settings = C_NextGen_Settings::get_instance();
         $mapper = C_Image_Mapper::get_instance();
         $image_key = $mapper->get_primary_key_column();
         $select = $id_only ? $image_key : $mapper->get_table_name() . '.*';
-        $sort_direction = $this->object->order_direction;
-        $sort_by = $this->object->order_by;
+        if (strtoupper($this->object->order_direction) == 'DSC') {
+            $this->object->order_direction = 'DESC';
+        }
+        $sort_direction = in_array(strtoupper($this->object->order_direction), array('ASC', 'DESC')) ? $this->object->order_direction : $settings->galSortDir;
+        $sort_by = in_array(strtolower($this->object->order_by), array_merge(C_Image_Mapper::get_instance()->get_column_names(), array('rand()'))) ? $this->object->order_by : $settings->galSort;
+        // Quickly sanitize
+        global $wpdb;
+        $this->object->container_ids = $this->object->container_ids ? array_map(array($wpdb, '_escape'), $this->object->container_ids) : array();
+        $this->object->entity_ids = $this->object->entity_ids ? array_map(array($wpdb, '_escape'), $this->object->entity_ids) : array();
+        $this->object->exclusions = $this->object->exclusions ? array_map(array($wpdb, '_escape'), $this->object->exclusions) : array();
         // Here's what this method is doing:
         // 1) Determines what results need returned
         // 2) Determines from what container ids the results should come from
@@ -972,7 +985,7 @@ class Mixin_Displayed_Gallery_Queries extends Mixin
         // Adjust the query more based on what source was selected
         if (in_array($this->object->source, array('recent', 'recent_images'))) {
             $sort_direction = 'DESC';
-            $sort_by = 'imagedate';
+            $sort_by = apply_filters('ngg_recent_images_sort_by_column', 'imagedate');
         } elseif ($this->object->source == 'random_images' && empty($this->object->entity_ids)) {
             // A gallery with source=random and a non-empty entity_ids is treated as being source=images & image_ids=(entity_ids)
             // In this case however source is random but no image ID are pre-filled.
@@ -1103,7 +1116,11 @@ class Mixin_Displayed_Gallery_Queries extends Mixin
             $container_ids = $this->object->container_ids;
             if ($container_ids) {
                 if ($container_ids !== array('0') && $container_ids !== array('')) {
+                    $container_ids = array_map('intval', $container_ids);
                     $album_mapper->where(array("{$album_key} IN %s", $container_ids));
+                    // This order_by is necessary for albums to be ordered correctly given the WHERE .. IN() above
+                    $order_string = implode(',', $container_ids);
+                    $album_mapper->order_by("FIELD('id', {$order_string})");
                     foreach ($album_mapper->run_query() as $album) {
                         $entity_ids = array_merge($entity_ids, (array) $album->sortorder);
                     }
@@ -1385,10 +1402,14 @@ class Mixin_Displayed_Gallery_Queries extends Mixin
      * Sorts the results of an album query
      * @param stdClass $a
      * @param stdClass $b
+     * @return int
      */
     function _sort_album_result($a, $b)
     {
         $key = $this->object->order_by;
+        if (!isset($a->{$key}) || !isset($b->{$key})) {
+            return 0;
+        }
         return strcmp($a->{$key}, $b->{$key});
     }
 }
@@ -1679,9 +1700,18 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
         $displayed_gallery = NULL;
         // Get the NextGEN settings to provide some defaults
         $settings = C_NextGen_Settings::get_instance();
+        // Perform some conversions...
+        if (isset($params['galleries'])) {
+            $params['gallery_ids'] = $params['galleries'];
+            unset($params['galleries']);
+        }
+        if (isset($params['albums'])) {
+            $params['album_ids'] = $params['albums'];
+            unset($params['albums']);
+        }
         // Configure the arguments
         $defaults = array('id' => NULL, 'ids' => NULL, 'source' => '', 'src' => '', 'container_ids' => array(), 'gallery_ids' => array(), 'album_ids' => array(), 'tag_ids' => array(), 'display_type' => '', 'display' => '', 'exclusions' => array(), 'order_by' => $settings->galSort, 'order_direction' => $settings->galSortOrder, 'image_ids' => array(), 'entity_ids' => array(), 'tagcloud' => FALSE, 'returns' => 'included', 'slug' => NULL, 'sortorder' => array());
-        $args = shortcode_atts($defaults, $params);
+        $args = shortcode_atts($defaults, $params, 'ngg');
         // Are we loading a specific displayed gallery that's persisted?
         $mapper = C_Displayed_Gallery_Mapper::get_instance();
         if (!is_null($args['id'])) {
@@ -1689,7 +1719,6 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
             unset($mapper);
             // no longer needed
         } else {
-            // Perform some conversions...
             // Galleries?
             if ($args['gallery_ids']) {
                 if ($args['source'] != 'albums' and $args['source'] != 'album') {
@@ -1912,7 +1941,7 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
             $lookup = FALSE;
         }
         // Enqueue any necessary static resources
-        if ((!defined('NGG_SKIP_LOAD_SCRIPTS') || !NGG_SKIP_LOAD_SCRIPTS) && !$this->is_rest_request()) {
+        if ((!defined('NGG_SKIP_LOAD_SCRIPTS') || !constant('NGG_SKIP_LOAD_SCRIPTS')) && !$this->is_rest_request()) {
             $controller->enqueue_frontend_resources($displayed_gallery);
         }
         // Try cache lookup, if we're to do so
@@ -1937,19 +1966,19 @@ class Mixin_Displayed_Gallery_Renderer extends Mixin
             // Try getting the rendered HTML from the cache
             $key = C_Photocrati_Transient_Manager::create_key('displayed_gallery_rendering', $key_params);
             $html = C_Photocrati_Transient_Manager::fetch($key, FALSE);
-            // Output debug messages
-            if ($html) {
-                $retval .= $this->debug_msg("HIT!");
-            } else {
-                $retval .= $this->debug_msg("MISS!");
-            }
-            // TODO: This is hack. We need to figure out a more uniform way of detecting dynamic image urls
-            if (strpos($html, C_Photocrati_Settings_Manager::get_instance()->dynamic_thumbnail_slug . '/') !== FALSE) {
-                $html = FALSE;
-                // forces the cache to be re-generated
-            }
         } else {
             $retval .= $this->debug_msg("Not looking up in cache as per rules");
+        }
+        // TODO: This is hack. We need to figure out a more uniform way of detecting dynamic image urls
+        if (strpos($html, C_Photocrati_Settings_Manager::get_instance()->dynamic_thumbnail_slug . '/') !== FALSE) {
+            $html = FALSE;
+            // forces the cache to be re-generated
+        }
+        // Output debug messages
+        if ($html) {
+            $retval .= $this->debug_msg("HIT!");
+        } else {
+            $retval .= $this->debug_msg("MISS!");
         }
         // If a cached version doesn't exist, then create the cache
         if (!$html) {
@@ -2120,10 +2149,10 @@ class C_Displayed_Gallery_Source_Manager
                 $retval[] = $source_obj;
             }
         }
-        usort($retval, array(&$this, '__sort_by_name'));
+        usort($retval, array($this, '_sort_by_name'));
         return $retval;
     }
-    function __sort_by_name($a, $b)
+    function _sort_by_name($a, $b)
     {
         return strcmp($a->name, $b->name);
     }
@@ -2511,7 +2540,11 @@ class Mixin_Display_Type_Form extends Mixin
      */
     function save_action($attributes = array())
     {
-        return $this->object->get_model()->save(array('settings' => $attributes));
+        $model = $this->object->get_model();
+        if ($model) {
+            return $model->save(['settings' => $attributes]);
+        }
+        return FALSE;
     }
     /**
      * Renders the AJAX pagination settings field
@@ -2525,33 +2558,14 @@ class Mixin_Display_Type_Form extends Mixin
     }
     function _render_thumbnail_override_settings_field($display_type)
     {
-        $hidden = !(isset($display_type->settings['override_thumbnail_settings']) ? $display_type->settings['override_thumbnail_settings'] : FALSE);
-        $override_field = $this->_render_radio_field($display_type, 'override_thumbnail_settings', __('Override thumbnail settings', 'nggallery'), isset($display_type->settings['override_thumbnail_settings']) ? $display_type->settings['override_thumbnail_settings'] : FALSE, __("This does not affect existing thumbnails; overriding the thumbnail settings will create an additional set of thumbnails. To change the size of existing thumbnails please visit 'Manage Galleries' and choose 'Create new thumbnails' for all images in the gallery.", 'nggallery'));
-        $dimensions_field = $this->object->render_partial('photocrati-nextgen_gallery_display#thumbnail_settings', array('display_type_name' => $display_type->name, 'name' => 'thumbnail_dimensions', 'label' => __('Thumbnail dimensions', 'nggallery'), 'thumbnail_width' => isset($display_type->settings['thumbnail_width']) ? intval($display_type->settings['thumbnail_width']) : 0, 'thumbnail_height' => isset($display_type->settings['thumbnail_height']) ? intval($display_type->settings['thumbnail_height']) : 0, 'hidden' => $hidden ? 'hidden' : '', 'text' => ''), TRUE);
-        /*
-        $qualities = array();
-        for ($i = 100; $i > 40; $i -= 5) { $qualities[$i] = "{$i}%"; }
-        $quality_field = $this->_render_select_field(
-            $display_type,
-            'thumbnail_quality',
-            __('Thumbnail quality', 'nggallery'),
-            $qualities,
-            isset($display_type->settings['thumbnail_quality']) ? $display_type->settings['thumbnail_quality'] : 100,
-            '',
-            $hidden
-        );
-        */
-        $crop_field = $this->_render_radio_field($display_type, 'thumbnail_crop', __('Thumbnail crop', 'nggallery'), isset($display_type->settings['thumbnail_crop']) ? $display_type->settings['thumbnail_crop'] : FALSE, '', $hidden);
-        /*
-        $watermark_field = $this->_render_radio_field(
-            $display_type,
-            'thumbnail_watermark',
-            __('Thumbnail watermark', 'nggallery'),
-            isset($display_type->settings['thumbnail_watermark']) ? $display_type->settings['thumbnail_watermark'] : FALSE,
-            '',
-            $hidden
-        );
-        */
+        $enabled = isset($display_type->settings['override_thumbnail_settings']) ? $display_type->settings['override_thumbnail_settings'] : FALSE;
+        $hidden = !$enabled;
+        $width = $enabled && isset($display_type->settings['thumbnail_width']) ? intval($display_type->settings['thumbnail_width']) : 0;
+        $height = $enabled && isset($display_type->settings['thumbnail_height']) ? intval($display_type->settings['thumbnail_height']) : 0;
+        $crop = $enabled && isset($display_type->settings['thumbnail_crop']) ? $display_type->settings['thumbnail_crop'] : FALSE;
+        $override_field = $this->_render_radio_field($display_type, 'override_thumbnail_settings', __('Override thumbnail settings', 'nggallery'), $enabled, __("This does not affect existing thumbnails; overriding the thumbnail settings will create an additional set of thumbnails. To change the size of existing thumbnails please visit 'Manage Galleries' and choose 'Create new thumbnails' for all images in the gallery.", 'nggallery'));
+        $dimensions_field = $this->object->render_partial('photocrati-nextgen_gallery_display#thumbnail_settings', array('display_type_name' => $display_type->name, 'name' => 'thumbnail_dimensions', 'label' => __('Thumbnail dimensions', 'nggallery'), 'thumbnail_width' => $width, 'thumbnail_height' => $height, 'hidden' => $hidden ? 'hidden' : '', 'text' => ''), TRUE);
+        $crop_field = $this->_render_radio_field($display_type, 'thumbnail_crop', __('Thumbnail crop', 'nggallery'), $crop, '', $hidden);
         $everything = $override_field . $dimensions_field . $crop_field;
         return $everything;
     }

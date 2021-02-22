@@ -1,20 +1,31 @@
 {% extends '_layout/base.twig' %}
 
+{% block hero %}
+  {% include "_components/hero-internal.twig" with { hero_headline: "Blog" } %}
+{% endblock %}
+
 {% block content %}
 
-<div class="container flex-wrap flex-grow my-8 lg:flex lg:my-16">
-
-  <main class="lg:w-2/3 lg:pr-16">
+  <main class="container mt-6">
     
     {% for post in posts %}
 
-      <article class="copy">
+      <article class="md:px-8 lg:px-16 py-8 sm:py-10 md:py-12 2xl:py-16 flex flex-col items-center">
 
-        <h1><a href="{{ function("get_permalink", post.ID)}}">{{post.title}}</a></h1>
+        <a class="overflow-hidden mb-6 md:mb-8 block" href="{{post.permalink}}">
+          {# <img class="lazyload" data-src="{{post.thumbnail ? post.thumbnail.src : theme.link~'/_resources/images/post-fallback.jpg' }}" alt="{{post.title}}"> #}
+          {% if post.thumbnail.width > 990 %}
+              <img class="lazyload" data-src="{{ post.thumbnail.src|resize(990, 0, 'center') }}" alt="{{ post.thumbnail.alt }}" />
+          {% else %}
+              <img class="lazyload" data-src="{{ post.thumbnail.src }}" alt="{{ post.thumbnail.alt }}" />
+          {% endif %}
+        </a>
 
-        {{post.content}}
+        <h2 class="m-0 text-center"><a class="text-xl md:text-2xl block font-bold font-headings hover:underline" href="{{ function("get_permalink", post.ID)}}">{{post.title}}</a></h2>
 
-        <a href="{{ function("get_permalink", post.ID)}}">Read More</a>
+        {# <p class="text-primary-light mt-2 text-center text-sm md:text-base">{{post.content|striptags|truncate(15)}}</p> #}
+
+        <a class="btn btn-outline--black inline-block py-2 mt-6 md:mt-8" href="{{ function("get_permalink", post.ID)}}">Read more</a>
 
       </article>  
 
@@ -22,14 +33,6 @@
 
   </main>
 
-  <aside class="bg-gray-100 lg:w-1/3">
-    {% include "_components/sidebar.twig" with {
-      index : true,
-      categories : categories,
-      archives : archives
-    } %}
-  </aside>
-
-</div>
+  {% include "_components/pagination.twig" %}
 
 {% endblock %}

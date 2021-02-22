@@ -12,3 +12,62 @@
 @tailwind utilities;
 
 // Custom CSS Here
+
+.latest-post__text {
+  transition: .5s;
+}
+
+.latest-post a:hover {
+  .latest-post__text {
+    @apply opacity-100 visible;
+  }
+}
+
+.ngg-gallery-thumbnail-wrap {
+  @apply mb-4;
+
+  @screen md {
+    @apply mb-8;
+  }
+
+  &:last-child {
+    @apply mb-0;
+  }
+}
+
+.ngg-galleryoverview.ngg-wrap {
+  @apply flex flex-col items-center;
+}
+
+.post-password-form {
+  @apply w-full max-w-screen-xs mx-auto;
+
+  > p:first-child {
+    @apply text-sm mb-6 text-primary-light;
+  }
+
+  input {
+    @apply text-center;
+  }
+
+  input[type="submit"] {
+    @apply w-full mt-1;
+
+    &:hover {
+      @apply bg-primary-light;
+    }
+  }
+}
+
+.footer-menu li a:hover,
+.footer-menu li a:hover span {
+  color: #bba76c;
+}
+
+.footer-menu li span {
+  @apply text-xs mt-2 font-normal text-primary-light transition duration-300;
+
+  @screen lg {
+    @apply text-sm;
+  }
+}

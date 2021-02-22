@@ -53,10 +53,6 @@
                     ngg_importml.methods.import.params.gallery_id   = ngg_importml.methods.urlencode(ngg_importml.selectors.gallery_select.val());
                     ngg_importml.methods.import.params.gallery_name = ngg_importml.methods.urlencode(ngg_importml.selectors.gallery_name.val());
 
-                    Object.keys(ngg_importml_i18n.sectoken).forEach(function(key) {
-                        ngg_importml.methods.import.params[key] = ngg_importml_i18n.sectoken[key];
-                    });
-
                     ngg_importml.progress_bar = $.nggProgressBar({
                         title: ngg_importml_i18n.progress_title,
                         infinite: true,
@@ -97,6 +93,7 @@
 
                 send_ajax: function() {
                     var params = ngg_importml.methods.import.params;
+                    params.nonce = ngg_importml_i18n.nonce;
                     params.attachment_ids = [ngg_importml.import_ids.pop()];
 
                     $.post(photocrati_ajax.url, params, function(data) {
@@ -165,14 +162,14 @@
                 // Show/hide MediaLibrary import buttons if a gallery is selected
                 ngg_importml.selectors.gallery_select.on('change', function() {
                     if (parseInt(this.value) == 0) {
-                        ngg_importml.selectors.gallery_name.fadeIn().focus();
+                        ngg_importml.selectors.gallery_name.fadeIn().trigger('focus');
                         if (ngg_importml.selectors.gallery_name.val().length == 0) {
                             ngg_importml.selectors.ml_btn_import.fadeOut();
                             ngg_importml.selectors.ml_btn_select.fadeOut();
                         }
                     } else {
                         ngg_importml.selectors.gallery_name.fadeOut(400, function() {
-                            ngg_importml.selectors.gallery_select.focus();
+                            ngg_importml.selectors.gallery_select.trigger('focus');
                             ngg_importml.selectors.ml_btn_select.fadeIn();
                             if (ngg_importml.import_ids.length > 0) {
                                 ngg_importml.selectors.ml_btn_import.fadeIn();
@@ -198,10 +195,12 @@
         }
     };
 
-    $(document).ready(function() {
-        window.ngg_importml = ngg_importml;
-        ngg_importml.initialize();
-        window.Frame_Event_Publisher.broadcast();
-    });
+    (function($) {
+        $(function() {
+            window.ngg_importml = ngg_importml;
+            ngg_importml.initialize();
+            window.Frame_Event_Publisher.broadcast();
+        });
+    })(jQuery);
 
 })(jQuery);

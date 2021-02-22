@@ -48,6 +48,10 @@ function my_deregister_styles() {
   wp_deregister_style('adtrak-cookie'); // Disable separate stylesheet for cookie notice (styles can be found in footer.scss)
   wp_deregister_style('wp-block-library'); // Gutenberg related stylesheet
   wp_deregister_style( 'dashicons' );
+  wp_deregister_style('fbrev_css');
+  if (!is_page('contact')) {
+		wp_deregister_style('contact-form-7');
+	}
 }
 add_action('wp_print_styles', 'my_deregister_styles', 100);
 
@@ -58,6 +62,30 @@ function wpgood_nf_display_enqueue_scripts(){
 }
 add_action( 'nf_display_enqueue_scripts', 'wpgood_nf_display_enqueue_scripts');
 
+
+/* ========================================================================================================================
+	Remove Nextgen styles and scripts
+======================================================================================================================== */
+
+if (!is_admin()) {
+  // goodbye NextGen junk
+  define('NGG_SKIP_LOAD_SCRIPTS', true);
+  function nextgen_styles() {
+          wp_deregister_style('NextGEN');
+  }
+add_action('wp_print_styles', 'nextgen_styles', 100);
+
+  add_action( 'wp_print_scripts', 'de_script', 100 );
+
+function de_script() {
+  wp_dequeue_script ( 'ngg_common' );
+  wp_deregister_script( 'ngg_common' );
+  if(!is_page('contact')) {
+    wp_dequeue_script ( 'jquery-migrate' );
+    wp_deregister_script( 'jquery-migrate' );
+  }
+}
+}
 
 
 /* ========================================================================================================================

@@ -1,74 +1,74 @@
 /***********************************************************
 Desktop Navs **********************************************/
 
-@screen lg {
-  .menu-primary,
-  .menu-secondary {
-    li {
-      @apply relative;
-        &:focus-within > .sub-menu {
-          @apply
-            block
-            opacity-100;
-        }
-    }
+.menu-primary {
+  li {
+    @apply relative;
+  }
+  
+  li:first-child {
+    @apply hidden;
 
-    a {
-      &:hover {
-        & + .sub-menu {
-          @apply
-            block
-            opacity-100;
-        }
-      }
+    @screen sm {
+      @apply inline-block;
     }
-
-    .icon-angle-down {
-      @apply
-        absolute
-        bottom-0
-        left-1/2
-        transform
-        -translate-x-1/2
-        w-4
-        h-4
-        opacity-50;
-    }
-    
-    .current-menu-item > a,
-    .current-menu-parent > a {
-      @apply text-red-500;
-    }
-    
   }
 
-  .sub-menu {
-    @apply
-      absolute
-      top-full
-      z-40
-      opacity-0
-      hidden
-      left-1/2
-      transform
-      shadow-lg
-      bg-white
-      -translate-x-1/2;
+  a {
+    @apply font-headings text-primary relative block mx-1 border-b border-white text-sm;
+    padding-bottom: 4px;
 
-      &:focus-within {
-        @apply
-          block
-          opacity-100
-          visible;
-      }
+    @screen xs {
+      @apply text-base mx-2;
+    }
 
-      width: 200px;
+    @screen sm {
+      @apply mx-3;
+    }
 
-      &:hover {
-        @apply
-          block
-          opacity-100
-          visible;
-      }
+    @screen md {
+      @apply mx-6;
+    }
+
+    &:hover {
+      @apply text-primary-dark border-gray-400;
+    }
   }
+  
+  .current_page_parent > a,
+  .current-menu-item > a,
+  .current-menu-parent > a {
+    @apply border-gray-400;
+  }
+  
 }
+
+// .sub-menu {
+//   @apply
+//     absolute
+//     top-full
+//     z-40
+//     opacity-0
+//     hidden
+//     left-1/2
+//     transform
+//     shadow-lg
+//     bg-white
+//     -translate-x-1/2;
+
+//     &:focus-within {
+//       @apply
+//         block
+//         opacity-100
+//         visible;
+//     }
+
+//     width: 200px;
+
+//     &:hover {
+//       @apply
+//         block
+//         opacity-100
+//         visible;
+//     }
+// }

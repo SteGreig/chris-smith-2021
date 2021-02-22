@@ -16,8 +16,15 @@
 				type="text"
 				name="image_options[gallerypath]"
                 data-original-value='<?php echo esc_attr($gallery_path); ?>'
-				value="<?php echo esc_attr($gallery_path) ?>"
-			/>
+				value="<?php echo esc_attr($gallery_path) ?>"/>
+            <?php if ($gallery_path_error_state) { ?>
+                <br/>
+                <div class="error">
+                    <p>
+                        <?php print $gallery_path_error_message; ?>
+                    </p>
+                </div>
+            <?php } ?>
 		</td>
 	</tr>
 	<?php 
@@ -83,7 +90,7 @@
 					<?php esc_html_e($resize_images_label) ?>
 			</label>
 		</td>
-		<td class="column2">
+		<td class="column2" style="white-space: nowrap">
 			<label for="image_width"><?php esc_html_e($resized_image_width_label)?></label>
 			<input
 				type="text"

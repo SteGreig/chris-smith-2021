@@ -56,7 +56,7 @@ class C_Lightbox_Library_Manager
         $simplelightbox = new C_NGG_Lightbox('simplelightbox');
         $simplelightbox->title = __('Simplelightbox', 'nggallery');
         $simplelightbox->code = 'class="ngg-simplelightbox" rel="%GALLERY_NAME%"';
-        $simplelightbox->styles = array('photocrati-lightbox#simplelightbox/simplelightbox.css');
+        $simplelightbox->styles = array('photocrati-lightbox#simplelightbox/simple-lightbox.css');
         $simplelightbox->scripts = array('photocrati-lightbox#simplelightbox/simple-lightbox.js', 'photocrati-lightbox#simplelightbox/nextgen_simple_lightbox_init.js');
         $this->register('simplelightbox', $simplelightbox);
         // Add Fancybox
@@ -64,7 +64,7 @@ class C_Lightbox_Library_Manager
         $fancybox->title = __('Fancybox', 'nggallery');
         $fancybox->code = 'class="ngg-fancybox" rel="%GALLERY_NAME%"';
         $fancybox->styles = array('photocrati-lightbox#fancybox/jquery.fancybox-1.3.4.css');
-        $fancybox->scripts = array('photocrati-lightbox#fancybox/jquery.easing-1.3.pack.js', 'photocrati-lightbox#fancybox/jquery.fancybox-1.3.4.pack.js', 'photocrati-lightbox#fancybox/nextgen_fancybox_init.js');
+        $fancybox->scripts = array('https://cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.1.0/jquery.browser.min.js', 'photocrati-lightbox#fancybox/jquery.easing-1.3.pack.js', 'photocrati-lightbox#fancybox/jquery.fancybox-1.3.4.pack.js', 'photocrati-lightbox#fancybox/nextgen_fancybox_init.js');
         $this->register('fancybox', $fancybox);
         // Add Shutter
         $shutter = new C_NGG_Lightbox('shutter');
@@ -197,13 +197,15 @@ class C_Lightbox_Library_Manager
         if (!wp_script_is('ngg_lightbox_context')) {
             wp_enqueue_script('ngg_lightbox_context', $router->get_static_url('photocrati-lightbox#lightbox_context.js'), array('ngg_common', 'photocrati_ajax'), NGG_SCRIPT_VERSION, TRUE);
         }
-        // Make the path to the static resources available for libraries
-        // Shutter-Reloaded in particular depends on this
+        // Make the path to the static resources available for libraries.
+        //
+        // Yes the {placeholder} is a stupid hack but it's necessary for Shutter Reloaded and is much faster
+        // than making get_static_url() function without requesting a filename parameter
         $this->_add_script_data(
             'ngg_common',
             // TODO: Should this be ngg_lightbox_context instead?
             'nextgen_lightbox_settings',
-            array('static_path' => $router->get_static_url('', 'photocrati-lightbox'), 'context' => $thumbEffectContext),
+            array('static_path' => M_Static_Assets::get_static_url('{placeholder}', 'photocrati-lightbox'), 'context' => $thumbEffectContext),
             TRUE,
             TRUE
         );

@@ -126,18 +126,18 @@ if (!class_exists('C_Photocrati_Installer'))
             $global_settings    = C_NextGen_Global_Settings::get_instance();
 
             // Somehow some installations are missing several default settings
-            // Because gallerystorage_driver is essential to know we do a 'soft' reset here
+            // Because imgWidth is essential to know we do a 'soft' reset here
             // by filling in any missing options from the default settings
-            if (is_null($local_settings->gallerystorage_driver)) {
-                $settings_installer = new C_NextGen_Settings_Installer();
-
+			$settings_installer = new C_NextGen_Settings_Installer();
+			if (!$global_settings->gallerypath) {
+				$global_settings->reset();
+                $settings_installer->install_global_settings();
+                $global_settings->save();
+			}
+            if (!$local_settings->imgWidth) {
                 $local_settings->reset();
                 $settings_installer->install_local_settings();
                 $local_settings->save();
-
-                $global_settings->reset();
-                $settings_installer->install_global_settings();
-                $global_settings->save();
             }
 
             // This is a specific hack/work-around/fix and can probably be removed sometime after 2.0.20's release
@@ -188,10 +188,9 @@ if (!class_exists('C_Photocrati_Installer'))
                     apc_clear_cache();
                 }
 
-				// We flush ALL transients
+				// Clear all of our transients
 				wp_cache_flush();
-				global $wpdb;
-				$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient%'");
+                C_Photocrati_Transient_Manager::flush();
 
 				// Remove all NGG created cron jobs
 				self::refresh_cron();
@@ -225,6 +224,9 @@ if (!class_exists('C_Photocrati_Installer'))
 				// Save any changes settings
 				$global_settings->save();
 				$local_settings->save();
+
+				// Set role capabilities
+                C_NextGEN_Bootstrap::set_role_caps();
             }
 
             // Another workaround to an issue caused by NextGen's lack of multisite compatibility. It's possible
@@ -240,7 +242,8 @@ if (!class_exists('C_Photocrati_Installer'))
             }
 
 			// Update the module list, and remove the update flag
-			if ($can_upgrade) {
+			if ($can_upgrade)
+			{
 				update_option('pope_module_list', $current_module_list);
 				self::done_upgrade();
 			}

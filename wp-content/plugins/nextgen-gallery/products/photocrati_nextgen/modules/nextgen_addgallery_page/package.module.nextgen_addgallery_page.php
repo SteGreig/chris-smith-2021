@@ -16,10 +16,11 @@ class A_Import_Folder_Form extends Mixin
         wp_enqueue_style('ngg_progressbar');
         wp_enqueue_script('jquery.filetree');
         wp_enqueue_script('ngg_progressbar');
+        return $this->call_parent('enqueue_static_resources');
     }
     function render()
     {
-        return $this->object->render_partial('photocrati-nextgen_addgallery_page#import_folder', array('browse_sec_token' => C_WordPress_Security_Manager::get_instance()->get_request_token('nextgen_upload_image'), 'import_sec_token' => C_WordPress_Security_Manager::get_instance()->get_request_token('nextgen_upload_image')), TRUE);
+        return $this->object->render_partial('photocrati-nextgen_addgallery_page#import_folder', array('browse_nonce' => M_Security::create_nonce('nextgen_upload_image'), 'import_nonce' => M_Security::create_nonce('nextgen_upload_image')), TRUE);
     }
 }
 /**
@@ -39,10 +40,7 @@ class A_Import_Media_Library_Form extends Mixin
         wp_enqueue_script('nextgen_media_library_import-js');
         wp_enqueue_style('nextgen_media_library_import-css');
         $url = admin_url() . 'admin.php?page=nggallery-manage-gallery&mode=edit&gid={gid}';
-        $i18n_array = array('admin_url' => admin_url(), 'title' => __('Import Images into NextGen Gallery', 'nggallery'), 'import_multiple' => __('Import %s images', 'nggallery'), 'import_singular' => __('Import 1 image', 'nggallery'), 'imported_multiple' => sprintf(__('{count} images were uploaded successfully. <a href="%s" target="_blank">Manage gallery</a>', 'nggallery'), $url), 'imported_singular' => sprintf(__('1 image was uploaded successfully. <a href="%s" target="_blank">Manage gallery</a>', 'nggallery'), $url), 'imported_none' => __('0 images were uploaded', 'nggallery'), 'progress_title' => __('Importing gallery', 'nggallery'), 'in_progress' => __('In Progress...', 'nggallery'), 'gritter_title' => __('Upload complete. Great job!', 'nggallery'), 'gritter_error' => __('Oops! Sorry, but an error occured. This may be due to a server misconfiguration. Check your PHP error log or ask your hosting provider for assistance.', 'nggallery'));
-        foreach (C_WordPress_Security_Manager::get_instance()->get_request_token('nextgen_upload_image')->get_request_list() as $name => $value) {
-            $i18n_array['sectoken'][$name] = $value;
-        }
+        $i18n_array = array('admin_url' => admin_url(), 'title' => __('Import Images into NextGen Gallery', 'nggallery'), 'import_multiple' => __('Import %s images', 'nggallery'), 'import_singular' => __('Import 1 image', 'nggallery'), 'imported_multiple' => sprintf(__('{count} images were uploaded successfully. <a href="%s" target="_blank">Manage gallery</a>', 'nggallery'), $url), 'imported_singular' => sprintf(__('1 image was uploaded successfully. <a href="%s" target="_blank">Manage gallery</a>', 'nggallery'), $url), 'imported_none' => __('0 images were uploaded', 'nggallery'), 'progress_title' => __('Importing gallery', 'nggallery'), 'in_progress' => __('In Progress...', 'nggallery'), 'gritter_title' => __('Upload complete. Great job!', 'nggallery'), 'gritter_error' => __('Oops! Sorry, but an error occured. This may be due to a server misconfiguration. Check your PHP error log or ask your hosting provider for assistance.', 'nggallery'), 'nonce' => M_Security::create_nonce('nextgen_upload_image'));
         wp_localize_script('nextgen_media_library_import-js', 'ngg_importml_i18n', $i18n_array);
     }
     function render()
@@ -52,16 +50,14 @@ class A_Import_Media_Library_Form extends Mixin
     }
     function get_galleries()
     {
-        $security = $this->get_registry()->get_utility('I_Security_Manager');
-        $sec_actor = $security->get_current_actor();
         $galleries = array();
-        if ($sec_actor->is_allowed('nextgen_edit_gallery')) {
+        if (M_Security::is_allowed('nextgen_edit_gallery')) {
             $galleries = C_Gallery_Mapper::get_instance()->find_all();
-            if (!$sec_actor->is_allowed('nextgen_edit_gallery_unowned')) {
+            if (!M_Security::is_allowed('nextgen_edit_gallery_unowned')) {
                 $galleries_all = $galleries;
                 $galleries = array();
                 foreach ($galleries_all as $gallery) {
-                    if ($sec_actor->is_user() && $sec_actor->get_entity_id() == (int) $gallery->author) {
+                    if (wp_get_current_user()->ID == (int) $gallery->author) {
                         $galleries[] = $gallery;
                     }
                 }
@@ -86,14 +82,37 @@ class A_NextGen_AddGallery_Ajax extends Mixin
         }
         return array('success' => 1, 'cookies' => $_COOKIE);
     }
+    function create_new_gallery_action()
+    {
+        $gallery_name = urldecode($this->param('gallery_name'));
+        $gallery_mapper = C_Gallery_Mapper::get_instance();
+        $retval = ['gallery_name' => esc_html($gallery_name), 'gallery_id' => NULL];
+        if (!$this->validate_ajax_request('nextgen_upload_image', TRUE)) {
+            $action = 'nextgen_upload_image';
+            $retval['allowed'] = M_Security::is_allowed($action);
+            $retval['verified_token'] = !$_REQUEST['nonce'] || !wp_verify_nonce($_REQUEST['nonce'], $action);
+            $retval['error'] = __("No permissions to upload images. Try refreshing the page or ensuring that your user account has sufficient roles/privileges.", 'nggallery');
+            return $retval;
+        }
+        if (strlen($gallery_name) > 0) {
+            $gallery = $gallery_mapper->create(['title' => $gallery_name]);
+            if (!$gallery->save()) {
+                $retval['error'] = $gallery->get_errors();
+            } else {
+                $retval['gallery_id'] = $gallery->id();
+            }
+        } else {
+            $retval['error'] = __("No gallery name specified", 'nggallery');
+        }
+        return $retval;
+    }
     function upload_image_action()
     {
-        $retval = array();
         $created_gallery = FALSE;
         $gallery_id = intval($this->param('gallery_id'));
         $gallery_name = urldecode($this->param('gallery_name'));
         $gallery_mapper = C_Gallery_Mapper::get_instance();
-        $error = FALSE;
+        $retval = ['gallery_name' => esc_html($gallery_name)];
         if ($this->validate_ajax_request('nextgen_upload_image', TRUE)) {
             if (!class_exists('DOMDocument')) {
                 $retval['error'] = __("Please ask your hosting provider or system administrator to enable the PHP XML module which is required for image uploads", 'nggallery');
@@ -101,21 +120,19 @@ class A_NextGen_AddGallery_Ajax extends Mixin
                 // We need to create a gallery
                 if ($gallery_id == 0) {
                     if (strlen($gallery_name) > 0) {
-                        $gallery = $gallery_mapper->create(array('title' => $gallery_name));
+                        $gallery = $gallery_mapper->create(['title' => $gallery_name]);
                         if (!$gallery->save()) {
                             $retval['error'] = $gallery->get_errors();
-                            $error = TRUE;
                         } else {
                             $created_gallery = TRUE;
                             $gallery_id = $gallery->id();
                         }
                     } else {
-                        $error = TRUE;
                         $retval['error'] = __("No gallery name specified", 'nggallery');
                     }
                 }
                 // Upload the image to the gallery
-                if (!$error) {
+                if (empty($retval['error'])) {
                     $retval['gallery_id'] = $gallery_id;
                     $settings = C_NextGen_Settings::get_instance();
                     $storage = C_Gallery_Storage::get_instance();
@@ -126,48 +143,43 @@ class A_NextGen_AddGallery_Ajax extends Mixin
                             } else {
                                 $retval['error'] = __('Failed to extract images from ZIP', 'nggallery');
                             }
-                        } elseif ($image = $storage->upload_image($gallery_id)) {
-                            $retval['image_ids'] = array($image->id());
-                            $retval['image_errors'] = array();
+                        } elseif ($image_id = $storage->upload_image($gallery_id)) {
+                            $retval['image_ids'] = array($image_id);
                             // check if image was resized correctly
-                            if ($settings->imgAutoResize) {
-                                $image_path = $storage->get_full_abspath($image);
+                            if ($settings->get('imgAutoResize')) {
+                                $image_path = $storage->get_full_abspath($image_id);
                                 $image_thumb = new C_NggLegacy_Thumbnail($image_path, true);
                                 if ($image_thumb->error) {
-                                    $retval['image_errors'][] = array('id' => $image->id(), 'error' => sprintf(__('Automatic image resizing failed [%1$s].', 'nggallery'), $image_thumb->errmsg));
-                                    $image_thumb = null;
+                                    $retval['error'] = sprintf(__('Automatic image resizing failed [%1$s].', 'nggallery'), $image_thumb->errmsg);
                                 }
                             }
                             // check if thumb was generated correctly
-                            $thumb_path = $storage->get_thumb_abspath($image);
+                            $thumb_path = $storage->get_image_abspath($image_id, 'thumb');
                             if (!file_exists($thumb_path)) {
-                                $retval['image_errors'][] = array('id' => $image->id(), 'error' => __('Thumbnail generation failed.', 'nggallery'));
+                                $retval['error'] = __('Thumbnail generation failed.', 'nggallery');
                             }
                         } else {
                             $retval['error'] = __('Image generation failed', 'nggallery');
-                            $error = TRUE;
                         }
                     } catch (E_NggErrorException $ex) {
                         $retval['error'] = $ex->getMessage();
-                        $error = TRUE;
                         if ($created_gallery) {
                             $gallery_mapper->destroy($gallery_id);
                         }
                     } catch (Exception $ex) {
-                        $retval['error'] = __("An unexpected error occured.", 'nggallery');
-                        $retval['error_details'] = $ex->getMessage();
-                        $error = TRUE;
+                        $retval['error'] = sprintf(__("An unexpected error occurred: %s", 'nggallery'), $ex->getMessage());
                     }
                 }
             }
         } else {
+            $action = 'nextgen_upload_image';
+            $retval['allowed'] = M_Security::is_allowed($action);
+            $retval['verified_token'] = !$_REQUEST['nonce'] || !wp_verify_nonce($_REQUEST['nonce'], $action);
             $retval['error'] = __("No permissions to upload images. Try refreshing the page or ensuring that your user account has sufficient roles/privileges.", 'nggallery');
-            $error = TRUE;
         }
-        if ($error) {
-            return $retval;
-        } else {
-            $retval['gallery_name'] = esc_html($gallery_name);
+        // Sending a 500 header is used for uppy.js to determine upload failures
+        if (!empty($retval['error'])) {
+            header('HTTP/1.1 500 Internal Server Error');
         }
         return $retval;
     }
@@ -297,10 +309,10 @@ class A_NextGen_AddGallery_Ajax extends Mixin
                             $retval['error'] = __('Image generation failed', 'nggallery');
                             break;
                         }
-                        $image = $storage->upload_base64_image($gallery_id, $file_data, $file_name);
+                        $image = $storage->upload_image($gallery_id, $file_name, $file_data);
                         if ($image) {
                             // Potentially import metadata from WordPress
-                            $image = $image_mapper->find($image->id());
+                            $image = $image_mapper->find($image);
                             if (!empty($attachment->post_excerpt)) {
                                 $image->alttext = $attachment->post_excerpt;
                             }
@@ -309,11 +321,11 @@ class A_NextGen_AddGallery_Ajax extends Mixin
                             }
                             $image = apply_filters('ngg_medialibrary_imported_image', $image, $attachment);
                             $image_mapper->save($image);
+                            $retval['image_ids'][] = $image->{$image->id_field};
                         } else {
                             $retval['error'] = __('Image generation failed', 'nggallery');
                             break;
                         }
-                        $retval['image_ids'][] = $image->{$image->id_field};
                     } catch (E_NggErrorException $ex) {
                         $retval['error'] = $ex->getMessage();
                         if ($created_gallery) {
@@ -372,17 +384,14 @@ class A_NextGen_AddGallery_Pages extends Mixin
 {
     function setup()
     {
-        // TODO: remove this if() when plupload is upgraded
-        // Because iOS cannot work with our current version of plupload we hide this page from iOS users
-        if (!preg_match('/crios|iP(hone|od|ad)/i', $_SERVER['HTTP_USER_AGENT'])) {
-            $this->object->add(NGG_ADD_GALLERY_SLUG, array('adapter' => 'A_NextGen_AddGallery_Controller', 'parent' => NGGFOLDER, 'add_menu' => TRUE, 'before' => 'nggallery-manage-gallery'));
-        }
+        $this->object->add(NGG_ADD_GALLERY_SLUG, ['adapter' => 'A_NextGen_AddGallery_Controller', 'parent' => NGGFOLDER, 'add_menu' => TRUE, 'before' => 'nggallery-manage-gallery']);
         return $this->call_parent('setup');
     }
 }
 /**
  * Class A_Upload_Images_Form
  * @mixin C_Form
+ * @property C_MVC_Controller|A_Upload_Images_Form $object
  * @adapts I_Form for "upload_images" context
  */
 class A_Upload_Images_Form extends Mixin
@@ -391,94 +400,85 @@ class A_Upload_Images_Form extends Mixin
     {
         return __("Upload Images", 'nggallery');
     }
-    function get_i18n_strings()
-    {
-        return array('no_image_uploaded' => __('No images were uploaded successfully.', 'nggallery'), 'one_image_uploaded' => __('1 image was uploaded successfully.', 'nggallery'), 'x_images_uploaded' => __('{count} images were uploaded successfully.', 'nggallery'), 'image_errors' => __('The following errors occured:', 'nggallery'), 'manage_gallery' => __('Manage gallery > {name}', 'nggallery'));
-    }
     /**
-     * Plupload stores its i18n JS *mostly* as "en.js" or "ar.js" - but some as zh_CN.js so we must check both if the
-     * first does not match.
-     *
-     * @return bool|string
+     * Pass PHP object or array to JS, preserving numeric and boolean value
+     * @param string $handle 
+     * @param string $name 
+     * @param object|array $data 
      */
-    function _find_plupload_i18n()
+    function pass_data_to_js($handle, $var_name, $data)
     {
-        $fs = C_Fs::get_instance();
-        $router = C_Router::get_instance();
-        $locale = get_locale();
-        $dir = $fs->find_static_abspath('photocrati-nextgen_addgallery_page#plupload-2.1.1/i18n') . DIRECTORY_SEPARATOR;
-        $tmp = explode('_', $locale, 2);
-        $retval = FALSE;
-        if (file_exists($dir . $tmp[0] . '.js')) {
-            $retval = $tmp[0];
-        } else {
-            if (file_exists($dir . $locale . '.js')) {
-                $retval = $locale;
-            }
-        }
-        if ($retval) {
-            $retval = $router->get_static_url('photocrati-nextgen_addgallery_page#plupload-2.1.1/i18n/' . $retval . '.js');
-        }
-        return $retval;
+        $var_name = esc_js($var_name);
+        return wp_add_inline_script($handle, "let {$var_name} = " . json_encode($data, JSON_NUMERIC_CHECK));
     }
     function enqueue_static_resources()
     {
-        wp_enqueue_style('ngg.plupload.queue');
-        wp_enqueue_script('browserplus');
-        wp_enqueue_script('ngg.plupload.queue');
-        wp_localize_script('ngg.plupload.queue', 'NggUploadImages_i18n', $this->object->get_i18n_strings());
-        $i18n = $this->_find_plupload_i18n();
-        if (!empty($i18n)) {
-            wp_enqueue_script('ngg.plupload.i18n', $i18n, array('ngg.plupload.full'), NGG_SCRIPT_VERSION);
+        wp_enqueue_script('uppy');
+        wp_enqueue_script('uppy_i18n');
+        wp_enqueue_style('uppy');
+        wp_enqueue_script('toastify');
+        wp_enqueue_style('toastify');
+        wp_localize_script('uppy', 'NggUploadImages_i18n', $this->object->get_i18n_strings());
+        $this->pass_data_to_js('uppy', 'NggUppyCoreSettings', $this->object->get_uppy_core_settings());
+        $this->pass_data_to_js('uppy', 'NggUppyDashboardSettings', $this->object->get_uppy_dashboard_settings());
+        $this->pass_data_to_js('uppy', 'NggXHRSettings', $this->object->get_uppy_xhr_settings());
+    }
+    function get_allowed_image_mime_types()
+    {
+        return ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png'];
+    }
+    function get_uppy_note()
+    {
+        $core_settings = $this->object->get_uppy_core_settings();
+        $max_size = $core_settings['restrictions']['maxfileSize'];
+        $max_size_megabytes = round((int) $max_size / (1024 * 1024));
+        return sprintf(__('You may select files up to %dMB', 'nggallery'), $max_size_megabytes);
+    }
+    function get_uppy_xhr_settings()
+    {
+        return apply_filters('ngg_uppy_xhr_settings', ['timeout' => intval(NGG_UPLOAD_TIMEOUT) * 1000, 'limit' => intval(NGG_UPLOAD_LIMIT), 'fieldName' => 'file']);
+    }
+    function get_uppy_core_settings()
+    {
+        return apply_filters('ngg_uppy_core_settings', ['locale' => $this->object->get_uppy_locale(), 'restrictions' => ['maxfileSize' => wp_max_upload_size(), 'allowedFileTypes' => $this->can_upload_zips() ? array_merge($this->object->get_allowed_image_mime_types(), ['.zip']) : get_allowed_mime_types()]]);
+    }
+    function get_uppy_dashboard_settings()
+    {
+        return apply_filters('ngg_uppy_dashboard_settings', ['inline' => true, 'target' => '#uploader', 'width' => '100%', 'proudlyDisplayPoweredByUppy' => false, 'hideRetryButton' => true, 'note' => $this->object->get_uppy_note(), 'locale' => ['strings' => ['dropPaste' => $this->can_upload_zips() ? __('Drag image and ZIP files here or %{browse}', 'nggallery') : __('Drag image files here or %{browse}', 'nggallery')]]]);
+    }
+    function get_uppy_locale()
+    {
+        $locale = get_locale();
+        $mapping = ['ar' => 'ar_SA', 'bg' => 'bg_BG', 'zh-cn' => 'zh_CN', 'zh-tw' => 'zh_TW', 'hr' => 'hr_HR', 'cs' => 'cs_CZ', 'da' => 'da_DK', 'nl' => 'nl_NL', 'en' => 'en_US', 'fi' => 'fi_FI', 'fr' => 'fr_FR', 'gl' => 'gl_ES', 'de' => 'de_DE', 'el' => 'el_GR', 'he' => 'he_IL', 'hu' => 'hu_HU', 'is' => 'is_IS', 'id' => 'id_ID', 'it' => 'it_IT', 'ja' => 'ja_JP', 'ko' => 'ko_KR', 'fa' => 'fa_IR', 'pl' => 'pl_PL', 'pt-br' => 'pt_BR', 'pt' => 'pt_PT', 'ro' => 'ro_RO', 'ru' => 'ru_RU', 'sr' => 'sr_RS', 'sk' => 'sk_SK', 'es' => 'es_ES', 'sv' => 'sv_SE', 'th' => 'th_TH', 'tr' => 'tr_TR', 'vi' => 'vi_VN'];
+        if (!empty($mapping[$locale])) {
+            $locale = $mapping[$locale];
         }
+        return $locale;
+    }
+    function can_upload_zips()
+    {
+        $global_settings = C_NextGen_Global_Settings::get_instance();
+        return !is_multisite() || is_multisite() && $global_settings->get('wpmuZipUpload');
+    }
+    function get_i18n_strings()
+    {
+        return ['locale' => $this->object->get_uppy_locale(), 'no_image_uploaded' => __('No images were uploaded successfully.', 'nggallery'), 'one_image_uploaded' => __('1 image was uploaded successfully.', 'nggallery'), 'x_images_uploaded' => __('{count} images were uploaded successfully.', 'nggallery'), 'manage_gallery' => __('Manage gallery > {name}', 'nggallery'), 'image_failed' => __('Image {filename} failed to upload: {error}', 'nggallery'), 'drag_files_here' => $this->can_upload_zips() ? __('Drag image and ZIP files here or %{browse}', 'nggallery') : __('Drag image files here or %{browse}', 'nggallery')];
     }
     function render()
     {
-        return $this->object->render_partial('photocrati-nextgen_addgallery_page#upload_images', array('plupload_options' => json_encode($this->object->get_plupload_options()), 'galleries' => $this->object->get_galleries(), 'sec_token' => C_WordPress_Security_Manager::get_instance()->get_request_token('nextgen_upload_image')), TRUE);
-    }
-    function get_plupload_options()
-    {
-        $retval = array();
-        $retval['runtimes'] = 'browserplus,html5,silverlight,html4';
-        $retval['max_file_size'] = strval(round((int) wp_max_upload_size() / 1024)) . 'kb';
-        $retval['filters'] = $this->object->get_plupload_filters();
-        $retval['flash_swf_url'] = includes_url('js/plupload/plupload.flash.swf');
-        $retval['silverlight_xap_url'] = includes_url('js/plupload/plupload.silverlight.xap');
-        $retval['debug'] = TRUE;
-        $retval['prevent_duplicates'] = TRUE;
-        return $retval;
-    }
-    function get_plupload_filters()
-    {
-        $retval = new stdClass();
-        $retval->mime_types = array();
-        $imgs = new stdClass();
-        $imgs->title = "Image files";
-        $imgs->extensions = "jpg,jpeg,gif,png,JPG,JPEG,GIF,PNG";
-        $retval->mime_types[] = $imgs;
-        $settings = C_NextGen_Settings::get_instance();
-        if (!is_multisite() || is_multisite() && $settings->get('wpmuZipUpload')) {
-            $zips = new stdClass();
-            $zips->title = "Zip files";
-            $zips->extensions = "zip,ZIP";
-            $retval->mime_types[] = $zips;
-        }
-        $retval->xss_protection = TRUE;
-        return $retval;
+        return $this->object->render_partial('photocrati-nextgen_addgallery_page#upload_images', ['galleries' => $this->object->get_galleries(), 'nonce' => M_Security::create_nonce('nextgen_upload_image')], TRUE);
     }
     function get_galleries()
     {
-        $security = $this->get_registry()->get_utility('I_Security_Manager');
-        $sec_actor = $security->get_current_actor();
         $galleries = array();
-        if ($sec_actor->is_allowed('nextgen_edit_gallery')) {
+        if (M_Security::is_allowed('nextgen_edit_gallery')) {
             $gallery_mapper = C_Gallery_Mapper::get_instance();
             $galleries = $gallery_mapper->find_all();
-            if (!$sec_actor->is_allowed('nextgen_edit_gallery_unowned')) {
+            if (!M_Security::is_allowed('nextgen_edit_gallery_unowned')) {
                 $galleries_all = $galleries;
                 $galleries = array();
                 foreach ($galleries_all as $gallery) {
-                    if ($sec_actor->is_user() && $sec_actor->get_entity_id() == (int) $gallery->author) {
+                    if (wp_get_current_user()->ID == (int) $gallery->author) {
                         $galleries[] = $gallery;
                     }
                 }

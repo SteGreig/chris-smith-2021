@@ -23,6 +23,7 @@ h4, .h4,
 h5, .h5,
 h6, .h6 {
   @apply
+    font-headings
     font-bold
     leading-snug
     mb-4;
@@ -40,13 +41,63 @@ h3 {
   @apply text-xl;
 }
 
+.section-title {
+  @apply font-headings font-normal text-primary-dark text-2xl relative flex justify-center mb-8 pb-6;
+
+  @screen sm {
+    @apply text-3xl mb-16;
+  }
+
+  @screen lg {
+    @apply text-4xl mb-20;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 100px;
+    transform: translateX(-50%);
+    height: 4px;
+    @apply bg-primary-dark;
+
+    @screen lg {
+      bottom: -10px;
+      height: 6px;
+      width: 123px;
+    }
+  }
+}
+
 // Copy
 
 .copy {
+
+  @screen lg {
+    @apply text-lg;
+  }
+
   > p {
     @apply
       leading-relaxed
       mb-6;
+
+      &:last-child {
+        @apply mb-0;
+      }
+  }
+
+  &.enlarge-intro > p:first-of-type {
+    @apply text-2xl text-primary-dark font-headings mb-8;
+
+    @screen md {
+      @apply text-3xl;
+    }
+
+    @screen lg {
+      @apply text-4xl;
+    }
   }
 
   a {
@@ -81,33 +132,6 @@ h3 {
   ol {
     li {
       @apply list-decimal;
-    }
-  }
-
-  blockquote {
-    @apply 
-      p-4
-      mb-8
-      bg-gray-100;
-  }
-}
-
-@screen md {
-  .copy {
-    img {
-        @apply w-auto;
-    }
-
-    .alignleft {
-      @apply float-left mt-1 mr-1 mb-1;
-    }
-
-    .aligncenter {
-      @apply float-none mx-auto my-0;
-    }
-
-    .alignright {
-      @apply float-right mt-1 ml-1 mb-1;
     }
   }
 }
