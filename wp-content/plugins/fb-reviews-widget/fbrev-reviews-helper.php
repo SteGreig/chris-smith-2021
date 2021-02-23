@@ -1,8 +1,8 @@
 <?php
-function fbrev_page($page_id, $page_name, $rating, $reviews, $open_link, $nofollow_link, $show_powered = true) {
+function fbrev_page($page_id, $page_name, $page_img, $rating, $review_count, $hide_based_on, $open_link, $nofollow_link, $show_powered = true) {
     ?>
     <div class="wp-facebook-left">
-        <img src="https://graph.facebook.com/<?php echo $page_id; ?>/picture" alt="<?php echo $page_name; ?>">
+        <img src="<?php echo $page_img; ?>" alt="<?php echo $page_name; ?>" width="50" height="50" title="<?php echo $page_name; ?>">
     </div>
     <div class="wp-facebook-right">
         <div class="wp-facebook-name">
@@ -12,8 +12,11 @@ function fbrev_page($page_id, $page_name, $rating, $reviews, $open_link, $nofoll
             <span class="wp-facebook-rating"><?php echo $rating; ?></span>
             <span class="wp-facebook-stars"><?php fbrev_stars($rating); ?></span>
         </div>
+        <?php if (!$hide_based_on) { ?>
+        <div class="wp-facebook-powered"><?php echo fbrev_i('Based on %s reviews', $review_count); ?></div>
+        <?php } ?>
         <?php if ($show_powered) { ?>
-        <div class="wp-facebook-powered">powered by <span>Facebook</span></div>
+        <div class="wp-facebook-powered"><?php echo fbrev_i('powered by %s', '<span>Facebook</span>'); ?></div>
         <?php } ?>
     </div>
     <?php
@@ -101,42 +104,44 @@ function fbrev_stars($rating) {
     ?></span><?php
 }
 
-function fbrev_rstrpos($haystack, $needle, $offset) {
-    $size = strlen ($haystack);
-    $pos = strpos (strrev($haystack), $needle, $size - $offset);
+function fbrev_anchor($url, $class, $text, $open_link, $nofollow_link) {
+    echo '<a href="' . $url . '"' . ($class ? ' class="' . $class . '"' : '') . ($open_link ? ' target="_blank"' : '') . ' rel="' . ($nofollow_link ? 'nofollow ' : '') . 'noopener">' . $text . '</a>';
+}
 
-    if ($pos === false)
-        return false;
-
-    return $size - $pos;
+function fbrev_image($src, $alt, $lazy, $def_ava = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', $atts = '') {
+    ?><img <?php if ($lazy) { ?>src="<?php echo $def_ava; ?>" data-<?php } ?>src="<?php echo $src; ?>" class="rplg-review-avatar<?php if ($lazy) { ?> rplg-blazy<?php } ?>" alt="<?php echo $alt; ?>" width="50" height="50" title="<?php echo $alt; ?>" onerror="if(this.src!='<?php echo $def_ava; ?>')this.src='<?php echo $def_ava; ?>';" <?php echo $atts; ?>><?php
 }
 
 function fbrev_trim_text($text, $size) {
-    if ($size > 0 && strlen($text) > $size) {
-        $visible_text = $text;
-        $invisible_text = '';
-        $idx = fbrev_rstrpos($text, ' ', $size);
-        if ($idx < 1) {
+    if ($size > 0 && fbrev_strlen($text) > $size) {
+        $sub_text = fbrev_substr($text, 0, $size);
+        $idx = fbrev_strrpos($sub_text, ' ') + 1;
+
+        if ($idx < 1 || $size - $idx > ($size / 2)) {
             $idx = $size;
         }
         if ($idx > 0) {
-            $visible_text = substr($text, 0, $idx);
-            $invisible_text = substr($text, $idx, strlen($text));
+            $visible_text = fbrev_substr($text, 0, $idx - 1);
+            $invisible_text = fbrev_substr($text, $idx - 1, fbrev_strlen($text));
         }
         echo $visible_text;
-        if (strlen($invisible_text) > 0) {
-            ?><span class="wp-more"><?php echo $invisible_text; ?></span><span class="wp-more-toggle" onclick="this.previousSibling.className='';this.textContent='';"><?php echo fbrev_i('read more'); ?></span><?php
+        if (fbrev_strlen($invisible_text) > 0) {
+            ?><span>... </span><span class="wp-more"><?php echo $invisible_text; ?></span><span class="wp-more-toggle"><?php echo fbrev_i('read more'); ?></span><?php
         }
     } else {
         echo $text;
     }
 }
 
-function fbrev_anchor($url, $class, $text, $open_link, $nofollow_link) {
-    ?><a href="<?php echo $url; ?>" class="<?php echo $class; ?>" <?php if ($open_link) { ?>target="_blank"<?php } ?> <?php if ($nofollow_link) { ?>rel="nofollow"<?php } ?>><?php echo $text; ?></a><?php
+function fbrev_strlen($str) {
+    return function_exists('mb_strlen') ? mb_strlen($str, 'UTF-8') : strlen($str);
 }
 
-function fbrev_image($src, $alt, $lazy, $def_ava = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', $atts = '') {
-    ?><img <?php if ($lazy) { ?>src="<?php echo $def_ava; ?>" data-<?php } ?>src="<?php echo $src; ?>" class="rplg-review-avatar<?php if ($lazy) { ?> rplg-blazy<?php } ?>" alt="<?php echo $alt; ?>" onerror="if(this.src!='<?php echo $def_ava; ?>')this.src='<?php echo $def_ava; ?>';" <?php echo $atts; ?>><?php
+function fbrev_strrpos($haystack, $needle, $offset = 0) {
+    return function_exists('mb_strrpos') ? mb_strrpos($haystack, $needle, $offset, 'UTF-8') : strrpos($haystack, $needle, $offset);
+}
+
+function fbrev_substr($str, $start, $length = NULL) {
+    return function_exists('mb_substr') ? mb_substr($str, $start, $length, 'UTF-8') : substr($str, $start, $length);
 }
 ?>

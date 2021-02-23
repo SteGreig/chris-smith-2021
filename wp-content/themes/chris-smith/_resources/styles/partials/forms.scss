@@ -2,6 +2,14 @@
 // Base Form Styles
 // --------------------------------------------------------------------------------------------------
 
+form {
+    @apply border-2 border-gray-500 p-6;
+
+    @screen md {
+        @apply p-10;
+    }
+}
+
 input,
 textarea,
 select {
@@ -14,7 +22,8 @@ select {
     border-gray-300
     border-solid
     text-sm
-    text-gray-900;
+    text-gray-900
+    mb-2;
 
     @screen sm {
         @apply
@@ -24,6 +33,18 @@ select {
     &[aria-invalid="true"] {
         background-color: #f3e2e2;
     }
+}
+
+h3 {
+    @apply mt-6;
+}
+
+h3:first-of-type {
+    @apply mt-0;
+}
+
+label {
+    @apply mb-1 text-base block;
 }
 
 // select {
@@ -69,10 +90,13 @@ textarea::placeholder {
 input[type="button"],
 input[type="submit"] {
     @apply
-    bg-black
-    text-white
+    bg-transparent
+    rounded-lg
     font-semibold
-    inline-block
+    block
+    border-2
+    font-headings
+    border-primary
     text-base
     w-auto
     cursor-pointer;
@@ -80,31 +104,7 @@ input[type="submit"] {
     
     &:hover {
         @apply
-        bg-red-700;
+        bg-primary text-white;
     }
-}
-
-// --------------------------------------------------------------------------------------------------
-// Ninja Forms
-// --------------------------------------------------------------------------------------------------
-nf-field {
-    @apply
-    float-left
-    mb-3
-    w-full;
-
-    &:last-child {
-        @apply mb-0;
-    }
-}
-
-.nf-form-fields-required,
-.nf-after-field,
-.nf-after-form-content {
-    display: none;
-}
-
-.hide-labels label {
-    display: none;
 }
 

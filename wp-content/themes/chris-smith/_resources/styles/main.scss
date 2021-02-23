@@ -13,6 +13,10 @@
 
 // Custom CSS Here
 
+.faq-q.active:hover {
+  @apply text-primary;
+}
+
 .latest-post__text {
   transition: .5s;
 }
@@ -52,10 +56,6 @@
 
   input[type="submit"] {
     @apply w-full mt-1;
-
-    &:hover {
-      @apply bg-primary-light;
-    }
   }
 }
 

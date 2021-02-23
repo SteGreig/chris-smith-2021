@@ -1,91 +1,57 @@
+<?php 
+/**
+Template Page for the gallery overview
+
+Follow variables are useable :
+
+	$gallery     : Contain all about the gallery
+	$images      : Contain all images, path, title
+	$pagination  : Contain the pagination content
+
+ You can check the content when you insert the tag <?php var_dump($variable) ?>
+ If you would like to show the timestamp of the image ,you can use <?php echo $exif['created_timestamp'] ?>
+**/
+?>
 <?php
 $this->start_element('nextgen_gallery.gallery_container', 'container', $displayed_gallery);
 ?>
-<!-- default-view.php -->
-<div
-	class="ngg-galleryoverview default-view <?php if (!intval($ajax_pagination)) echo ' ngg-ajax-pagination-none'; ?>"
-	id="ngg-gallery-<?php echo esc_attr($displayed_gallery_id)?>-<?php echo esc_attr($current_page)?>">
 
-	<?php
+<?php if (!defined ('ABSPATH')) die ('No direct access allowed'); ?><?php if (!empty ($gallery)) : ?>
 
-	$this->start_element('nextgen_gallery.image_list_container', 'container', $images);
+<div class="ngg-galleryoverview ngg-wrap" id="<?php echo $gallery->anchor ?>">
 
-	?>
-	<!-- Thumbnails -->
-	<?php for ($i=0; $i<count($images); $i++):
-       $image = $images[$i];
-       $thumb_size = $storage->get_image_dimensions($image, $thumbnail_size_name);
-       $style = isset($image->style) ? $image->style : null;
-       $column_class = 'ngg-' . $number_of_columns . '-columns'; 
-
-       if (isset($image->hidden) && $image->hidden) {
-          $style = 'style="display: none;"';
-       }
-       else {
-       		$style = null;
-       }
-
-			 $this->start_element('nextgen_gallery.image_panel', 'item', $image);
-
-			?>
-			<div id="<?php echo esc_attr('ngg-image-' . $i) ?>" class="ngg-gallery-thumbnail-box <?php if ($number_of_columns > 0 && empty($show_all_in_lightbox)) { echo $column_class; } ?>" <?php if ($style) echo $style; ?>>
-				<?php
-
-				$this->start_element('nextgen_gallery.image', 'item', $image);
-
-				?>
-        <div class="ngg-gallery-thumbnail">
-            <a href="<?php echo esc_attr($storage->get_image_url($image, 'full', TRUE))?>"
-               title="<?php echo esc_attr($image->description)?>"
-               data-src="<?php echo esc_attr($storage->get_image_url($image)); ?>"
-               data-thumbnail="<?php echo esc_attr($storage->get_image_url($image, 'thumb')); ?>"
-               data-image-id="<?php echo esc_attr($image->{$image->id_field}); ?>"
-               data-title="<?php echo esc_attr($image->alttext); ?>"
-               data-description="<?php echo esc_attr(stripslashes($image->description)); ?>"
-               data-image-slug="<?php echo esc_attr($image->image_slug); ?>"
-               <?php echo $effect_code ?>>
-                <img
-                    title="<?php echo esc_attr($image->alttext)?>"
-                    alt="<?php echo esc_attr($image->alttext)?>"
-                    src="<?php echo esc_attr($storage->get_image_url($image, $thumbnail_size_name))?>"
-                    width="<?php echo esc_attr($thumb_size['width'])?>"
-                    height="<?php echo esc_attr($thumb_size['height'])?>"
-                    style="max-width:100%;"
-                />
-            </a>
-        </div>
-				<?php
-
-				$this->end_element();
-
-				?>
-			</div> 
-			<?php
-
-			$this->end_element();
-
-			?>
-
-	<?php endfor ?>
-
-	<br style="clear: both" />
-
-	<?php
-
-	$this->end_element();
-
-	if (!empty($slideshow_link)): ?>
+<?php /* if ($gallery->show_slideshow) { ?>
+	<!-- Slideshow link -->
 	<div class="slideshowlink">
-        <a href='<?php echo esc_attr($slideshow_link) ?>'><?php echo esc_html($slideshow_link_text) ?></a>
-		
+		<a class="slideshowlink" href="<?php echo nextgen_esc_url($gallery->slideshow_link) ?>">
+			<?php echo $gallery->slideshow_link_text ?>
+		</a>
 	</div>
-	<?php endif ?>
+<?php } */ ?>
 
-	<?php if ($pagination): ?>
+	<!-- Thumbnails -->
+    <?php $i = 0; ?>
+	<?php foreach ( $images as $image ) : ?>
+	
+	<div id="ngg-image-<?php echo $image->pid ?>" class="ngg-gallery-thumbnail-wrap" <?php echo $image->style ?> >
+		<div class="ngg-gallery-thumbnail" >
+			<img data-object-fit="cover" class="lazyload" title="<?php echo esc_attr($image->alttext) ?>" alt="<?php echo esc_attr($image->alttext) ?>" data-src="<?php echo nextgen_esc_url($image->imageURL) ?>" <?php // echo $image->size ?> />
+		</div>
+	</div>
+
+    <?php if ( $image->hidden ) continue; ?>
+    <?php if ($gallery->columns > 0): ?>
+        <?php if ((($i + 1) % $gallery->columns) == 0 ): ?>
+            <br style="clear: both" />
+        <?php endif; ?>
+    <?php endif; ?>
+    <?php $i++; ?>
+
+ 	<?php endforeach; ?>
+ 	
 	<!-- Pagination -->
-	<?php echo $pagination ?>
-	<?php else: ?>
-	<div class="ngg-clear"></div>
-	<?php endif ?>
+ 	<?php // echo $pagination ?>
+ 	
 </div>
-<?php $this->end_element(); ?>
+
+<?php endif; ?>

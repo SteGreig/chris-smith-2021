@@ -1,33 +1,37 @@
-=== Facebook Reviews ===
+=== Plugin Name ===
 Contributors: richplugins
-Donate link: https://richplugins.com/facebook-reviews-pro-wordpress-plugin
-Tags: Facebook, reviews, facebook reviews, testimonials, google, facebook page reviews
+Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
+Tags: Facebook, reviews, recommendations, facebook reviews, facebook recommendations, ratings, testimonials, google, facebook page reviews
 Requires at least: 2.8
-Tested up to: 5.1
-Stable tag: 1.5.3
+Tested up to: 5.6
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Facebook Reviews Widget show Facebook Page reviews on your WordPress website to increase user confidence and SEO.
+Facebook reviews widget and shortcode! Shows Facebook page reviews and recommendations on your WordPress website to increase user confidence and SEO.
 
 == Description ==
 
-Why better to use <a href="https://richplugins.com/facebook-reviews-pro-wordpress-plugin">Business version</a> of the plugin
+The plugin display Facebook Page Reviews and Recommendations on your websites in sidebar widget to get more traffic and user trusts.
 
-The plugin display Facebook Page Reviews on your websites in sidebar widget to get more traffic and user trusts.
+This plugin uses the Facebook Graph API and requires an admin rights to the FB page to get the reviews and recommendations.
 
-This plugin uses the Facebook Graph API and requires an admin rights to the FB page to get the reviews.
+Why better to use <a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin">Business version</a> of the plugin
 
-[youtube https://www.youtube.com/watch?v=o0HV-bJ6_qE]
+[youtube https://www.youtube.com/watch?v=TEqz4RDr7EI]
 
-[Online demo](http://demo.richplugins.com/)
+[Online demo](https://richplugins.com/demos)
 
 = Plugin Features =
 
 * Free!
 * SEO
+* Shortcode support!
+* Auto refresh reviews
+* Display ALL Facebook reviews
+* Shows "Based on ... reviews" section
 * Trim long reviews with "read more" link
-* Display all Facebook page reviews per location
+* Support page builders: Gutenberg, Elementor, SiteOrigin, Beaver Builder, WPBakery, Divi
 * Shows real reviews from Facebook users to increase user confidence
 * Easy get of Facebook pages and instantly show reviews
 * Review list theme
@@ -38,14 +42,14 @@ This plugin uses the Facebook Graph API and requires an admin rights to the FB p
 
 = Get More Features with Business version! =
 
-[Upgrade to Business](https://richplugins.com/facebook-reviews-pro-wordpress-plugin)
+[Upgrade to Business](https://richplugins.com/business-reviews-bundle-wordpress-plugin)
 
 * Merge reviews between each other from different platforms (Google, Facebook, Yelp) and places
-* Trying to get more than 5 Google reviews
+* Display all Google and Facebook reviews
 * Google Rich Snippets (schema.org)
-* Support shortcode, powerful <b>Shortcode Builder</b>
+* Powerful <b>Collection Builder</b>
 * Slider/Grid themes to show G+ reviews like testimonials
-* Google Trust Badge (right/left fixed or embedded)
+* Facebook Trust Badge (right/left float or embedded)
 * 'Write a review' button to available leave Google review directly on your website
 * Show/hide any elements (business, reviews, avatars, names, time and etc)
 * Any Sorting: recent, oldest, rating, striped
@@ -54,12 +58,12 @@ This plugin uses the Facebook Graph API and requires an admin rights to the FB p
 * Minimum rating filter
 * Priority support
 
-= Additional Business Reviews Plugins =
+= Additional Free Reviews Plugins =
 
-Why limit your reviews to just Facebook Reviews? Check out our other free business reviews plugins to add to your site as well:
+Why limit your reviews to just Facebook Reviews? Check out our other free reviews plugins to add to your site as well:
 
-* [Google Reviews Pro](https://richplugins.com/google-reviews-pro-wordpress-plugin "Google Reviews Pro")
-* [Yelp Reviews Pro](https://richplugins.com/yelp-reviews-pro-wordpress-plugin "Yelp Reviews Pro")
+* [Google Reviews Widget](https://wordpress.org/plugins/widget-google-reviews/ "Google Reviews Widget")
+* [Yelp Reviews Widget](https://wordpress.org/plugins/widget-yelp-reviews/ "Yelp Reviews Widget")
 
 Please keep in mind that plugin requests Facebook permission <a href="https://developers.facebook.com/docs/facebook-login/permissions#reference-manage_pages" target="_blank">manage_pages</a> to read your page reviews and show it in the widget.
 
@@ -71,9 +75,96 @@ Please keep in mind that plugin requests Facebook permission <a href="https://de
 == Screenshots ==
 
 1. Facebook Reviews widget
-2. Facebook Reviews sidebar
+2. Facebook Reviews shortcode
+3. Facebook Reviews shortcode builder
+4. Facebook Reviews sidebar widget
 
 == Changelog ==
+
+= 1.7.3 =
+* Improve: RTL support
+* Bugfix: 'read more' supports UTF
+
+= 1.7.2 =
+* Improve: Added Slovenian language
+* Tested WP 5.6
+
+= 1.7.1 =
+* Improve: Added Hebrew
+* Improve: Added Greek
+* Improve: Added Russian
+* Tested WP 5.5
+
+= 1.7 =
+* Improve: Upgrade Facebook API to v7.0
+* Improve: Added 'Based on ...' translation for Italian
+* Bugfix: W3C compatibility
+
+= 1.6.9 =
+* Improve: Facebook connection without cross-site cookies
+
+= 1.6.8 =
+* Improve: Facebook Rating API has updated
+
+= 1.6.7 =
+* Improve: added new locale sk_SK
+* Improve: added new locale de_AT
+* Improve: update installation video, readme and screenshots
+* Bugfix: Yoast XML plugin makes 'Class not found' error
+
+= 1.6.6 =
+* Improve: added 'Based on ... reviews' feature
+* Improve: added hide reviews option
+
+= 1.6.5 =
+* Update to WordPress 5.3
+* Improve: added dots for read more link
+* Improve: added width, height, title for img elements (SEO)
+* Improve: added rel="noopener" option
+
+= 1.6.4 =
+* Bugfix: is_admin checks for notice
+
+= 1.6.3 =
+* Improve: shortcode support bugfix
+* Improve: upload page photo bugfix
+* Bugfix: remove undefined grw_i function
+
+= 1.6.2 =
+* Improve: shortcode support
+* Improve: upload page photo
+* Improve: added new locale bg_BG
+* Improve: admin notie
+* Bugfix: undefined widget property in Elementor
+
+= 1.6.1 =
+* Bugfix: some style fixes
+
+= 1.6 =
+* Bugfix: escape GET parameters for a setting page
+
+= 1.5.9 =
+* Plugin's name changed
+* Plugin's logo changed
+* Bugfix: sanitize POST parameters
+
+= 1.5.8 =
+* Plugin description and images changes
+
+= 1.5.7 =
+* Check and fix all translations
+
+= 1.5.6 =
+* Bugfix: fix French translation
+* Bugfix: fix German translation
+* Bugfix: css max-width photo conflict
+
+= 1.5.5 =
+* Update to WordPress 5.2
+* Bugfix: conflict with a Bootstrap css in the widget
+
+= 1.5.4 =
+* Update readme and links to the business version
 
 = 1.5.3 =
 * Improve: update user picture dimension to 120x120

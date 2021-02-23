@@ -100,13 +100,13 @@ h3 {
     }
   }
 
-  a {
+  a:not(.btn) {
     @apply
       inline-block
-      text-primary;
+      text-primary underline;
 
       &:hover {
-        @apply underline;
+        @apply text-primary-light;
       }
   }
 
@@ -119,7 +119,7 @@ h3 {
     li {
       @apply
         leading-relaxed
-        mb-2;
+        mb-1;
     }
   }
 
@@ -132,6 +132,14 @@ h3 {
   ol {
     li {
       @apply list-decimal;
+    }
+  }
+
+  .no-bullets {
+    @apply pl-0;
+
+    li {
+      @apply list-none;
     }
   }
 }

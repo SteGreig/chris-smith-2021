@@ -1,0 +1,23 @@
+<div class="w-full">
+  <div class="container max-w-screen-lg px-4 md:px-8 lg:px-16 mx-auto py-8 sm:py-12 lg:py-16">
+
+    {% for item in accordion_content %}
+
+      <div class="py-6 border-b first:border-t border-gray-300">
+
+        <p class="faq-q text-lg xl:text-xl font-headings text-primary transition duration-300 flex justify-between items-center cursor-pointer hover:text-primary-light">
+          <span>{{item.title}}</span>
+          {{ fn('icon','angle-down') }}
+          {{ fn('icon','angle-up','hidden') }}
+        </p>
+
+        <div class="faq-a copy hidden py-4 text-base text-primary-light">
+          {{item.content}}
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+</div>

@@ -1,0 +1,36 @@
+
+<div class="w-full">
+  <div class="container max-w-screen-3xl mx-auto">
+
+    <ul class="flex flex-wrap">
+
+      {% for item in packages %}
+
+        <li class="flex w-full lg:w-1/3 p-2 xl:p-4 2xl:p-6">
+
+          <div>
+
+            <img class="lazyload" data-src="{{item.package_image.url|resize(500)}}" alt="Wedding package {{item.price}}">
+          
+            <div class="border border-gray-300 p-6 sm:p-8 2xl:p-10">
+
+              <p class="font-bold font-headings text-3xl mb-4">{{item.price}}</p>
+
+              <div class="copy text-base mb-10">
+                {{item.package_description}}
+              </div>
+
+              <a class="btn btn-outline--black block py-3 text-center" href="/contact/">Book Today</a>
+
+            </div>
+
+          </div>
+
+        </li>
+
+      {% endfor %}
+
+    </ul>
+
+  </div>
+</div>

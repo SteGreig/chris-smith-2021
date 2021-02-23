@@ -5,6 +5,11 @@
 	// add all of your code within here, not above or below
 	$(function () {
 
+			$('.faq-q').click(function() {
+				$(this).toggleClass('active');
+				$(this).next('.faq-a').slideToggle();
+				$(this).find('svg').toggle();
+			});
 
 	});
 

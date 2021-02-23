@@ -9,12 +9,11 @@
 
 class Fb_Reviews_Widget extends WP_Widget {
 
-    public $options;
-
-    public $widget_fields = array(
+    public static $widget_fields = array(
         'title'                => '',
         'page_id'              => '',
         'page_name'            => '',
+        'page_photo'           => '',
         'page_access_token'    => '',
         'text_size'            => '120',
         'dark_theme'           => '',
@@ -23,10 +22,13 @@ class Fb_Reviews_Widget extends WP_Widget {
         'disable_user_link'    => '',
         'max_width'            => '',
         'max_height'           => '',
+        'hide_based_on'        => false,
+        'hide_reviews'         => false,
         'centered'             => false,
         'open_link'            => true,
         'nofollow_link'        => true,
         'show_success_api'     => true,
+        'fb_rating_calc'       => false,
         'lazy_load_img'        => true,
         'cache'                => '24',
         'api_ratings_limit'    => FBREV_API_RATINGS_LIMIT,
@@ -47,12 +49,12 @@ class Fb_Reviews_Widget extends WP_Widget {
         wp_register_script('wpac_time_js', plugins_url('/static/js/wpac-time.js', __FILE__), array(), FBREV_VERSION);
         wp_enqueue_script('wpac_time_js', plugins_url('/static/js/wpac-time.js', __FILE__));
 
-        wp_register_style('fbrev_css', plugins_url('/static/css/facebook-review.css', __FILE__));
+        wp_register_style('fbrev_css', plugins_url('/static/css/facebook-review.css', __FILE__), array(), FBREV_VERSION);
         wp_enqueue_style('fbrev_css', plugins_url('/static/css/facebook-review.css', __FILE__));
     }
 
     function fbrev_widget_scripts($hook) {
-        if ($hook == 'widgets.php' || ($hook == 'post.php' && defined('SITEORIGIN_PANELS_VERSION'))) {
+        if ($hook == 'widgets.php' || $hook == 'settings_page_fbrev' || ($hook == 'post.php' && defined('SITEORIGIN_PANELS_VERSION'))) {
 
             wp_register_style('rplg_wp_css', plugins_url('/static/css/rplg-wp.css', __FILE__));
             wp_enqueue_style('rplg_wp_css', plugins_url('/static/css/rplg-wp.css', __FILE__));
@@ -72,8 +74,8 @@ class Fb_Reviews_Widget extends WP_Widget {
 
         if (fbrev_enabled()) {
             extract($args);
-            foreach ($this->widget_fields as $variable => $value) {
-                ${$variable} = !isset($instance[$variable]) ? $this->widget_fields[$variable] : esc_attr($instance[$variable]);
+            foreach (self::$widget_fields as $variable => $value) {
+                ${$variable} = !isset($instance[$variable]) ? self::$widget_fields[$variable] : esc_attr($instance[$variable]);
             }
 
             if (empty($page_id)) { ?>
@@ -87,8 +89,14 @@ class Fb_Reviews_Widget extends WP_Widget {
             $response = fbrev_api_rating($page_id, $page_access_token, $instance, $this->id, $cache, $api_ratings_limit, $show_success_api);
             $response_data = $response['data'];
             $response_json = rplg_json_decode($response_data);
-            if (isset($response_json->data)) {
-                $reviews = $response_json->data;
+            if (isset($response_json->ratings) && isset($response_json->ratings->data)) {
+                $reviews = $response_json->ratings->data;
+                if (isset($response_json->overall_star_rating)) {
+                    $facebook_rating = number_format((float)$response_json->overall_star_rating, 1, '.', '');
+                }
+                if (isset($response_json->rating_count) && $response_json->rating_count > 0) {
+                    $facebook_count = $response_json->rating_count;
+                }
                 if ($title) { ?><h2 class="fbrev-widget-title widget-title"><?php echo $title; ?></h2><?php }
                 include(dirname(__FILE__) . '/fbrev-reviews.php');
             } else {
@@ -104,16 +112,16 @@ class Fb_Reviews_Widget extends WP_Widget {
 
     function update($new_instance, $old_instance) {
         $instance = $old_instance;
-        foreach ($this->widget_fields as $field => $value) {
-            $instance[$field] = strip_tags(stripslashes($new_instance[$field]));
+        foreach (self::$widget_fields as $field => $value) {
+            $instance[$field] = isset($new_instance[$field]) ? strip_tags(stripslashes($new_instance[$field])) : '';
         }
         return $instance;
     }
 
     function form($instance) {
         global $wp_version;
-        foreach ($this->widget_fields as $field => $value) {
-            if (array_key_exists($field, $this->widget_fields)) {
+        foreach (self::$widget_fields as $field => $value) {
+            if (array_key_exists($field, self::$widget_fields)) {
                 ${$field} = !isset($instance[$field]) ? $value : esc_attr($instance[$field]);
             }
         }

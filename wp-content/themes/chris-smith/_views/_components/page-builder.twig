@@ -26,6 +26,32 @@
       </div>
     {% endfor %}
 
+  {% elseif item.acf_fc_layout == "accordion" %}
+
+    {% include '_components/accordion.twig'
+      with {
+        accordion_content: item.accordion_content,
+      }
+    %}
+
+  {% elseif item.acf_fc_layout == "wedding_packages" and item.show_wedding_packages %}
+
+    {% include '_components/pricing.twig'
+      with {
+        packages: post.meta('wedding_packages')
+      }
+    %}
+
+  {% elseif item.acf_fc_layout == "facebook_reviews" and item.show_fb_reviews %}
+
+    <div class="w-full">
+      <div class="container max-w-screen-lg px-4 md:px-8 lg:px-16 py-8 sm:py-12 lg:py-16 2xl:py-20">
+
+        {{ fn('dynamic_sidebar','reviews_page') }}
+
+      </div>
+    </div>
+
   {% endif %}
 
 {% endfor %}

@@ -137,6 +137,7 @@
 
 .rt-tab-container .field-container input.kcseo-date {
     width: auto;
+    min-width: 180px;
 }
 
 /* tab */
@@ -216,9 +217,12 @@ ul.rt-tab-nav li a:focus {
     float: right;
     width: 86%;
     box-sizing: border-box;
-    display: none;
     border: 1px solid #e7e7e7;
     padding: 20px;
+}
+
+.rt-tab-container .rt-tab-content:not(.active) {
+    display: none;
 }
 
 div#rt-schema-tab-holder:after {
@@ -284,14 +288,90 @@ p.description.kco-telephone > span {
 }
 
 .field-container .field-label span {
-    margin-left: 10px;
+    margin-left: 5px;
+}
+
+p.description .required,
+.field-container .field-label span.required {
     color: red;
 }
 
-p.description .required {
-    color: red;
+.field-container .field-label span.recommended {
+    color: #721c24;
 }
 
+/* tooltip */
+
+[data-kcseo-tooltip] {
+    position: relative;
+}
+
+[data-kcseo-tooltip]:hover::after {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    content: attr(data-kcseo-tooltip);
+    background: rgba(0, 0, 0, .8);
+    color: #fff;
+    padding: .5em 1em;
+    border-radius: 7px;
+    transform: translateX(-50%);
+    transition: all ease-in-out 250ms;
+}
+
+/* heading container */
+.field-container.kcseo-heading-container {
+    margin-bottom: 25px;
+}
+
+.kcseo-section-title-wrap {
+    border-bottom: 1px dashed #888;
+    padding-bottom: 5px;
+}
+
+.kcseo-section-title-wrap h5 {
+    font-size: 16px;
+    padding: 0;
+    margin: 0 0 5px;
+}
+
+/* End heading container */
+/* ============== 2nd Level START ============== */
+.kcseo-group-item {
+    padding: 20px;
+    border: 1px dashed #777;
+}
+
+.kc-multiple-schema-tool {
+    padding: 5px;
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.kcseo-group-item .kc-top-toolbar {
+    text-align: right;
+}
+
+span.kc-remove-schema,
+span.kcseo-remove-group {
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
+
+.kc-btn-danger {
+    background: red;
+    border-color: red;
+    color: #ffffff;
+}
+
+.multiple-schema-item {
+    border: 2px solid #9ce646;
+    padding: 10px 20px;
+    margin-bottom: 25px;
+}
+
+/* ============== 2nd END ================ */
 .schema-holder .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     padding: .5em 0.6em;
     font-size: 14px;

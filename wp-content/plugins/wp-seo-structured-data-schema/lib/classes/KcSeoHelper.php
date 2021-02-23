@@ -85,6 +85,19 @@ if (!class_exists('KcSeoSettings')):
                     $newValue = esc_url($value);
                 } else if ($type == 'textarea') {
                     $newValue = wp_kses($value, array());
+                } else if ($field['type'] == 'group' && !empty($field['fields'])) {
+                    $newGValue = array();
+                    $groupValue = !empty($value) && is_array($value) ? $value : array();
+                    foreach ($groupValue as $gId => $gValue) {
+                        $newVItem = array();
+                        foreach ($field['fields'] as $gFid => $fieldItem) {
+                            if (isset($gValue[$gFid])) {
+                                $newVItem[$gFid] = $this->sanitize($fieldItem, $gValue[$gFid]);
+                            }
+                        }
+                        array_push($newGValue, $newVItem);
+                    }
+                    $newValue = $newGValue;
                 } else {
                     $newValue = sanitize_text_field($value);
                 }
@@ -111,15 +124,284 @@ if (!class_exists('KcSeoSettings')):
             return $newValue;
         }
 
+        static function get_same_as($value) {
+            $sameAs = null;
+            if ($value) {
+                $sameAsRaw = preg_split('/\r\n|\r|\n/', $value);
+                $sameAsRaw = !empty($sameAsRaw) ? array_filter($sameAsRaw) : array();
+                if (!empty($sameAsRaw) && is_array($sameAsRaw)) {
+                    if (1 < count($sameAsRaw)) {
+                        $sameAs = $sameAsRaw;
+                    } else {
+                        $sameAs = $sameAsRaw[0];
+                    }
+                }
+            }
+
+            return $sameAs;
+        }
+
 
         function imageInfo($attachment_id) {
             $data = array();
             $imgData = wp_get_attachment_metadata($attachment_id);
-            $data['url'] = wp_get_attachment_url($attachment_id, "full");
+            $data['url'] = wp_get_attachment_url($attachment_id);
             $data['width'] = !empty($imgData['width']) ? absint($imgData['width']) : 0;
             $data['height'] = !empty($imgData['height']) ? absint($imgData['height']) : 0;
+
             return $data;
         }
+
+	    static function filter_content($content, $limit = 0) {
+		    $content = preg_replace('#\[[^\]]+\]#', '', wp_strip_all_tags($content));
+		    $content = self::characterToHTMLEntity($content);
+		    if ($limit && strlen($content) > $limit) {
+			    $content = mb_substr($content, 0, $limit, "utf-8");
+			    $content = preg_replace('/\W\w+\s*(\W*)$/', '$1', $content);
+		    }
+
+		    return $content;
+	    }
+
+	    static function characterToHTMLEntity($str) {
+		    $replace = array(
+			    "'",
+			    '&',
+			    '<',
+			    '>',
+			    '€',
+			    '‘',
+			    '’',
+			    '“',
+			    '”',
+			    '–',
+			    '—',
+			    '¡',
+			    '¢',
+			    '£',
+			    '¤',
+			    '¥',
+			    '¦',
+			    '§',
+			    '¨',
+			    '©',
+			    'ª',
+			    '«',
+			    '¬',
+			    '®',
+			    '¯',
+			    '°',
+			    '±',
+			    '²',
+			    '³',
+			    '´',
+			    'µ',
+			    '¶',
+			    '·',
+			    '¸',
+			    '¹',
+			    'º',
+			    '»',
+			    '¼',
+			    '½',
+			    '¾',
+			    '¿',
+			    'À',
+			    'Á',
+			    'Â',
+			    'Ã',
+			    'Ä',
+			    'Å',
+			    'Æ',
+			    'Ç',
+			    'È',
+			    'É',
+			    'Ê',
+			    'Ë',
+			    'Ì',
+			    'Í',
+			    'Î',
+			    'Ï',
+			    'Ð',
+			    'Ñ',
+			    'Ò',
+			    'Ó',
+			    'Ô',
+			    'Õ',
+			    'Ö',
+			    '×',
+			    'Ø',
+			    'Ù',
+			    'Ú',
+			    'Û',
+			    'Ü',
+			    'Ý',
+			    'Þ',
+			    'ß',
+			    'à',
+			    'á',
+			    'â',
+			    'ã',
+			    'ä',
+			    'å',
+			    'æ',
+			    'ç',
+			    'è',
+			    'é',
+			    'ê',
+			    'ë',
+			    'ì',
+			    'í',
+			    'î',
+			    'ï',
+			    'ð',
+			    'ñ',
+			    'ò',
+			    'ó',
+			    'ô',
+			    'õ',
+			    'ö',
+			    '÷',
+			    'ø',
+			    'ù',
+			    'ú',
+			    'û',
+			    'ü',
+			    'ý',
+			    'þ',
+			    'ÿ',
+			    'Œ',
+			    'œ',
+			    '‚',
+			    '„',
+			    '…',
+			    '™',
+			    '•',
+			    '˜'
+		    );
+
+		    $search = array(
+			    '&#8217;',
+			    '&amp;',
+			    '&lt;',
+			    '&gt;',
+			    '&euro;',
+			    '&lsquo;',
+			    '&rsquo;',
+			    '&ldquo;',
+			    '&rdquo;',
+			    '&ndash;',
+			    '&mdash;',
+			    '&iexcl;',
+			    '&cent;',
+			    '&pound;',
+			    '&curren;',
+			    '&yen;',
+			    '&brvbar;',
+			    '&sect;',
+			    '&uml;',
+			    '&copy;',
+			    '&ordf;',
+			    '&laquo;',
+			    '&not;',
+			    '&reg;',
+			    '&macr;',
+			    '&deg;',
+			    '&plusmn;',
+			    '&sup2;',
+			    '&sup3;',
+			    '&acute;',
+			    '&micro;',
+			    '&para;',
+			    '&middot;',
+			    '&cedil;',
+			    '&sup1;',
+			    '&ordm;',
+			    '&raquo;',
+			    '&frac14;',
+			    '&frac12;',
+			    '&frac34;',
+			    '&iquest;',
+			    '&Agrave;',
+			    '&Aacute;',
+			    '&Acirc;',
+			    '&Atilde;',
+			    '&Auml;',
+			    '&Aring;',
+			    '&AElig;',
+			    '&Ccedil;',
+			    '&Egrave;',
+			    '&Eacute;',
+			    '&Ecirc;',
+			    '&Euml;',
+			    '&Igrave;',
+			    '&Iacute;',
+			    '&Icirc;',
+			    '&Iuml;',
+			    '&ETH;',
+			    '&Ntilde;',
+			    '&Ograve;',
+			    '&Oacute;',
+			    '&Ocirc;',
+			    '&Otilde;',
+			    '&Ouml;',
+			    '&times;',
+			    '&Oslash;',
+			    '&Ugrave;',
+			    '&Uacute;',
+			    '&Ucirc;',
+			    '&Uuml;',
+			    '&Yacute;',
+			    '&THORN;',
+			    '&szlig;',
+			    '&agrave;',
+			    '&aacute;',
+			    '&acirc;',
+			    '&atilde;',
+			    '&auml;',
+			    '&aring;',
+			    '&aelig;',
+			    '&ccedil;',
+			    '&egrave;',
+			    '&eacute;',
+			    '&ecirc;',
+			    '&euml;',
+			    '&igrave;',
+			    '&iacute;',
+			    '&icirc;',
+			    '&iuml;',
+			    '&eth;',
+			    '&ntilde;',
+			    '&ograve;',
+			    '&oacute;',
+			    '&ocirc;',
+			    '&otilde;',
+			    '&ouml;',
+			    '&divide;',
+			    '&oslash;',
+			    '&ugrave;',
+			    '&uacute;',
+			    '&ucirc;',
+			    '&uuml;',
+			    '&yacute;',
+			    '&thorn;',
+			    '&yuml;',
+			    '&OElig;',
+			    '&oelig;',
+			    '&sbquo;',
+			    '&bdquo;',
+			    '&hellip;',
+			    '&trade;',
+			    '&bull;',
+			    '&asymp;'
+		    );
+
+		    //REPLACE VALUES
+		    $str = str_replace($search, $replace, $str);
+
+		    //RETURN FORMATED STRING
+		    return $str;
+	    }
 
         function fix1_2DataMigration() {
             global $KcSeoWPSchema;
@@ -157,8 +439,7 @@ if (!class_exists('KcSeoSettings')):
 
 
                 if (!empty($ids)) {
-                    $schemaModel = new KcSeoSchemaModel;
-                    $schemaFields = $schemaModel->schemaTypes();
+                    $schemaFields = KcSeoOptions::getSchemaTypes();
                     foreach ($ids as $id) {
                         foreach ($schemaFields as $schemaID => $schema) {
                             $schemaMetaId = $KcSeoWPSchema->KcSeoPrefix . $schemaID;
@@ -202,6 +483,7 @@ if (!class_exists('KcSeoSettings')):
                             <li><?php _e("Recipe", "wp-seo-structured-data-schema") ?></li>
                             <li><?php _e("TV Episode", "wp-seo-structured-data-schema") ?></li>
                             <li><?php _e("QAPage", "wp-seo-structured-data-schema") ?></li>
+                            <li><?php _e("Item List", "wp-seo-structured-data-schema") ?></li>
                         </ol>
                     </li>
                 </ol>
@@ -211,6 +493,34 @@ if (!class_exists('KcSeoSettings')):
                 </div>
             </div>
             <?php
+        }
+
+        function fix2_5_7_to_2_5_8() {
+            global $KcSeoWPSchema;
+            $installed_version = get_option($KcSeoWPSchema->options['installed_version']);
+            if (version_compare($installed_version, '2.5.7', '<=')) {
+                $settings = get_option($KcSeoWPSchema->options['settings']);
+                if (isset($settings['contact']['contactType'])) {
+                    $settings['contact']['contactType'] = strtolower($settings['contact']['contactType']);
+                    update_option($KcSeoWPSchema->options['settings'], $settings);
+                }
+                if (isset($settings['area_served']) && !empty($settings['area_served'])) {
+
+                    $cList = KcSeoOptions::getCountryList();
+                    $areas = array();
+                    foreach ($settings['area_served'] as $area) {
+                        $key = array_search($area, $cList);
+                        if ($key) {
+                            $areas[] = $key;
+                        }
+                    }
+                    if (!empty($areas)) {
+                        $settings['area_served'] = $areas;
+                        update_option($KcSeoWPSchema->options['settings'], $settings);
+                    }
+                }
+
+            }
         }
     }
 

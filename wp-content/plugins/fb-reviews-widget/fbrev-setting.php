@@ -70,8 +70,8 @@ if (isset($_POST['fbrev_active']) && isset($_GET['fbrev_active'])) {
 }
 
 if (isset($_POST['fbrev_setting'])) {
-    update_option('fbrev_app_id', $_POST['fbrev_app_id']);
-    update_option('fbrev_app_secret', $_POST['fbrev_app_secret']);
+    update_option('fbrev_app_id', trim(sanitize_text_field($_POST['fbrev_app_id'])));
+    update_option('fbrev_app_secret', trim(sanitize_text_field($_POST['fbrev_app_secret'])));
 }
 
 wp_register_style('rplg_setting_css', plugins_url('/static/css/rplg-setting.css', __FILE__));
@@ -79,7 +79,7 @@ wp_enqueue_style('rplg_setting_css', plugins_url('/static/css/rplg-setting.css',
 
 wp_enqueue_script('jquery');
 
-$tab              = isset($_GET['fbrev_tab']) && strlen($_GET['fbrev_tab']) > 0 ? $_GET['fbrev_tab'] : 'about';
+$tab              = isset($_GET['fbrev_tab']) && strlen($_GET['fbrev_tab']) > 0 ? esc_attr($_GET['fbrev_tab']) : 'about';
 $fbrev_app_id     = get_option('fbrev_app_id');
 $fbrev_app_secret = get_option('fbrev_app_secret');
 $fbrev_enabled    = get_option('fbrev_active') == '1';
@@ -99,7 +99,7 @@ $fbrev_enabled    = get_option('fbrev_active') == '1';
             <div class="nav-tab-wrapper">
                 <a href="#about"     class="nav-tab<?php if ($tab == 'about')     { ?> nav-tab-active<?php } ?>">About</a>
                 <a href="#setting"   class="nav-tab<?php if ($tab == 'setting')   { ?> nav-tab-active<?php } ?>">Settings</a>
-                <a href="#shortcode" class="nav-tab<?php if ($tab == 'shortcode') { ?> nav-tab-active<?php } ?>">Shortcode Builder</a>
+                <a href="#shortcode" class="nav-tab<?php if ($tab == 'shortcode') { ?> nav-tab-active<?php } ?>">Shortcode</a>
                 <a href="#support"   class="nav-tab<?php if ($tab == 'support')   { ?> nav-tab-active<?php } ?>">Support</a>
             </div>
 
@@ -111,7 +111,7 @@ $fbrev_enabled    = get_option('fbrev_active') == '1';
                         <p>Please see Introduction Video to understand how it works. Also you can find most common answers and solutions for most common questions and issues in next tabs.</p>
                         <div class="rplg-alert rplg-alert-success">
                             <strong>Try more features in the Business version</strong>: Merge Google, Facebook and Yelp reviews, Beautiful themes (Slider, Grid, Trust Badges), Shortcode support, Rich Snippets, Rating filter, Any sorting, Include/Exclude words filter, Hide/Show any elements, Priority support and many others.
-                            <a class="button-primary button" href="https://richplugins.com/facebook-reviews-pro-wordpress-plugin" target="_blank" style="margin-left:10px">Upgrade to Business</a>
+                            <a class="button-primary button" href="https://richplugins.com/business-reviews-bundle-wordpress-plugin" target="_blank" style="margin-left:10px">Upgrade to Business</a>
                         </div>
                         <br>
                         <div class="rplg-socials">
@@ -140,7 +140,7 @@ $fbrev_enabled    = get_option('fbrev_active') == '1';
                         </div>
                     </div>
                     <div class="rplg-flex-col">
-                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/o0HV-bJ6_qE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/TEqz4RDr7EI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -171,8 +171,20 @@ $fbrev_enabled    = get_option('fbrev_active') == '1';
             </div>
 
             <div id="shortcode" class="tab-content" style="display:<?php echo $tab == 'shortcode' ? 'block' : 'none'?>;">
-                <h3>Shortcode Builder is available in the Business version of the plugin</h3>
-                <a href="https://richplugins.com/facebook-reviews-pro-wordpress-plugin" target="_blank" style="color:#00bf54;font-size:16px;text-decoration:underline;"><?php echo fbrev_i('Upgrade to Business'); ?></a>
+                <h3>Shortcode</h3>
+                <div class="rplg-flex-row">
+                    <div class="rplg-flex-col3">
+                        <div class="widget-content">
+                            <?php $fbrev_widget = new Fb_Reviews_Widget; $fbrev_widget->form(array()); ?>
+                        </div>
+                    </div>
+                    <div class="rplg-flex-col6">
+                        <div class="shortcode-content">
+                            <textarea id="rplg_shortcode" style="display:block;width:100%;height:200px;padding:10px" onclick="window.rplg_shortcode.select();document.execCommand('copy');window.rplg_shortcode_msg.innerHTML='Shortcode copied, please paste it to the page content';" readonly>Connect Facebook page to show the shortcode</textarea>
+                            <p id="rplg_shortcode_msg"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="support" class="tab-content" style="display:<?php echo $tab == 'support' ? 'block' : 'none'?>;">
@@ -242,6 +254,32 @@ jQuery(document).ready(function($) {
         $(activeId).show().siblings('.tab-content').hide();
         $this.addClass('nav-tab-active').siblings().removeClass('nav-tab-active');
         e.preventDefault();
+    });
+
+    var el = document.body.querySelector('.widget-content'),
+        elms = '.widget-content input[type="text"][name],' +
+               '.widget-content input[type="hidden"][name],' +
+               '.widget-content input[type="checkbox"][name]';
+
+    $(elms).change(function() {
+        if (!this.getAttribute('name')) return;
+        if (!el.querySelector('.fbrev-page-id').value) return;
+
+        var args = '',
+            ctrls = el.querySelectorAll(elms);
+        for (var i = 0; i < ctrls.length; i++) {
+            var ctrl = ctrls[i],
+                match = ctrl.getAttribute('name').match(/\[\]\[(.*?)\]/);
+            if (match && match.length > 1) {
+                var name = match[1];
+                if (ctrl.type == 'checkbox') {
+                    if (ctrl.checked) args += ' ' + name + '=true';
+                } else {
+                    if (ctrl.value) args += ' ' + name + '=' + '"' + ctrl.value + '"';
+                }
+            }
+        }
+        window.rplg_shortcode.value = '[fbrev' + args + ']';
     });
 });
 </script>

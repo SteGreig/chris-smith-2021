@@ -35,7 +35,7 @@ Desktop Navs **********************************************/
     }
   }
   
-  .current_page_parent > a,
+  .single-post & .current_page_parent > a,
   .current-menu-item > a,
   .current-menu-parent > a {
     @apply border-gray-400;

@@ -1,13 +1,15 @@
 {% extends '_layout/base.twig' %}
 
 {% block hero %}
-  {% include "_components/hero-internal.twig" with { hero_headline: post.title } %}
+  {% include "_components/hero-internal.twig" with { hero_headline: hero_headline|default(post.title) } %}
 {% endblock %}
 
 
 {% block content %}
 
 <main>
+
+  <h1 class="sr-only">{{post.h1|default(post.title)}}</h1>
 
   {% include "_components/page-builder.twig" %}
 

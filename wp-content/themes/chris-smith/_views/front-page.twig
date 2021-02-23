@@ -12,6 +12,8 @@
 
   <main>
 
+    <h1 class="sr-only">{{post.h1|default(post.title)}}</h1>
+
     {% include "_components/page-builder.twig" %}
 
   </main>

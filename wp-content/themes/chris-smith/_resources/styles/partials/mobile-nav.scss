@@ -6,9 +6,9 @@
 $menuTitleHeight : 59px;
 
 /* Colours */
-$mobNavBg : theme('colors.gray.100');
+$mobNavBg : #fff;
 
-$titleBg : theme('colors.gray.300');
+$titleBg : #fff;
 $titleText : theme('colors.gray.600');
 
 $linkText : theme('colors.gray.800');
@@ -18,14 +18,14 @@ $linkBorder : theme('colors.gray.200');
 $linkTextActive : theme('colors.white');
 $linkBgActive : theme('colors.gray.600');
 
-$linkTextOn : theme('colors.gray.300');
-$linkBgOn : theme('colors.gray.800');
+$linkTextOn : #fff;
+$linkBgOn : theme('colors.primary.DEFAULT');
 
 $dropdownArrowBg : transparent;
 $dropdownArrowText : inherit;
 
 $closeText : theme('colors.white');
-$closeTextBg : theme('colors.red.800');
+$closeTextBg : #111;
 
 
 .mob-nav {
@@ -43,7 +43,7 @@ $closeTextBg : theme('colors.red.800');
 
     content: "Menu";
 
-    @apply block w-full p-4 text-center;
+    @apply block w-full p-2 text-center;
 
     border-bottom: 1px solid $linkBorder;
     background: $titleBg;
@@ -64,6 +64,10 @@ $closeTextBg : theme('colors.red.800');
     color: $linkText;
     border-bottom: 1px solid $linkBorder;
     background-color: $linkBg;
+
+    span {
+      @apply hidden;
+    }
 
     &:hover {
       @apply no-underline;
@@ -144,7 +148,7 @@ $closeTextBg : theme('colors.red.800');
   @apply hidden fixed left-0 transform -translate-x-full w-12 h-12;
 
   background-color: $closeTextBg;
-  bottom: 40%;
+  bottom: 0;
 
   .icon {
     @apply m-auto text-4xl;

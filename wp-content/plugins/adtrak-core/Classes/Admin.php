@@ -60,7 +60,7 @@ class Admin
      */
     function adtrak_footer_content()
     {
-        $footer_content = '<p>Powered by WordPress</p>';
+        $footer_content = '<p>Powered by WordPress and <a href="https://adtrak.co.uk">Adtrak</a></p>';
         echo $footer_content;
         remove_filter('update_footer', 'core_update_footer');
     }

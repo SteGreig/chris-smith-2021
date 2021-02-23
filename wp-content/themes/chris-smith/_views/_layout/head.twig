@@ -33,7 +33,7 @@
   {{ function('wp_head') }}
 </head>
 
-<body>
+<body class="{{body_class}}">
 
 
   <nav class="mob-nav">
@@ -59,4 +59,4 @@
 
   <div class="wrapper">
 
-      {# {% include "_components/mobile-top-bar.twig" %} #}
+      {% include "_components/mobile-fixed-bar.twig" %}
