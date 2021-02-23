@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 
+/*! purgecss start ignore */
+
 @import   'partials/core.scss',
           'partials/buttons.scss',
           'partials/cookies.scss',
@@ -9,9 +11,13 @@
           'partials/mobile-nav.scss',
           'partials/typography.scss';
 
+/*! purgecss end ignore */
+
 @tailwind utilities;
 
 // Custom CSS Here
+
+/*! purgecss start ignore */
 
 .faq-q.active:hover {
   @apply text-primary;
@@ -71,3 +77,5 @@
     @apply text-sm;
   }
 }
+
+/*! purgecss end ignore */
