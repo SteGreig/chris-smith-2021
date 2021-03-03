@@ -5,13 +5,13 @@
 
       <div class="py-6 border-b first:border-t border-gray-300">
 
-        <p class="faq-q text-lg xl:text-xl font-headings text-primary transition duration-300 flex justify-between items-center cursor-pointer hover:text-primary-light">
+        <p class="faq-q xl:text-xl font-headings font-light text-primary transition duration-300 flex justify-between items-center cursor-pointer hover:text-primary-light">
           <span>{{item.title}}</span>
           {{ fn('icon','angle-down') }}
           {{ fn('icon','angle-up','hidden') }}
         </p>
 
-        <div class="faq-a copy hidden py-4 text-base text-primary-light">
+        <div class="faq-a copy hidden py-4 text-sm text-primary-light">
           {{item.content}}
         </div>
 

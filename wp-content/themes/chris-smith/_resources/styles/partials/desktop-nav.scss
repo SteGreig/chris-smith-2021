@@ -14,6 +14,10 @@ Desktop Navs **********************************************/
     }
   }
 
+  .social a {
+    @apply m-0;
+  }
+
   a {
     @apply font-headings font-light text-primary relative block mx-1 border-b border-white text-sm;
     padding-bottom: 4px;

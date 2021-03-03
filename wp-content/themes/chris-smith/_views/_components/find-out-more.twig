@@ -9,7 +9,7 @@
       {% for item in footerMenu.items %}
         {% if item.name != "Contact" and item.name != "Client Login" %}
           <li class="{{item.class}} {{ item.current ? 'current-menu-item' }} w-1/2 sm:w-1/4 p-3 sm:py-4 lg:px-5 lg:py-6 lg:my-1">
-            <a class="flex flex-col items-center text-xl lg:text-2xl leading-tight font-headings" href="{{item.link}}">{{item.name}}</a>
+            <a class="flex flex-col items-center text-xl lg:text-2xl leading-tight font-headings font-light" href="{{item.link}}">{{item.name}}</a>
           </li>
         {% endif %}
       {% endfor %}
