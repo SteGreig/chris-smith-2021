@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  @apply font-serif antialiased text-primary leading-relaxed;
+  @apply font-body antialiased text-primary leading-relaxed;
 }
 
 // Uses IntersectionObserver to identify when the viewport has scrolled, and then show back to top

@@ -15,7 +15,7 @@ Desktop Navs **********************************************/
   }
 
   a {
-    @apply font-headings text-primary relative block mx-1 border-b border-white text-sm;
+    @apply font-headings font-light text-primary relative block mx-1 border-b border-white text-sm;
     padding-bottom: 4px;
 
     @screen xs {

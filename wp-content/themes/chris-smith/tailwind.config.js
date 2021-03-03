@@ -12,8 +12,8 @@ module.exports = {
       "4xl": "1900px",
     },
     fontFamily: {
-      serif: ["Baskervville", "serif"],
-      headings: ["Bodoni Moda", "serif"],
+      body: ["Raleway", "sans-serif"],
+      headings: ["Oswald", "sans-serif"],
     },
     filter: {
       none: "none",

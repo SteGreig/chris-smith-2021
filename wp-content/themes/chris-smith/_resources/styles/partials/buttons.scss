@@ -3,7 +3,7 @@ Buttons ***************************************************/
 input[type="button"],
 button,
 .btn {
-  @apply font-headings rounded-lg py-4 px-8 font-semibold transition duration-300;
+  @apply font-headings rounded-lg py-4 px-8 transition duration-300;
 }
 
 .btn--primary {

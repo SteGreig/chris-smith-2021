@@ -3,5 +3,9 @@
 
     {{content}}
 
+    {% if cta %}
+      <a class="mt-6 no-underline" href="{{cta.url}}">{{cta.title}} &rarr;</a>
+    {% endif %}
+
   </div>
 </div>
