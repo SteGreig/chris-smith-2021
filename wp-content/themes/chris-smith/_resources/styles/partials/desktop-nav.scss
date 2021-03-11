@@ -6,13 +6,13 @@ Desktop Navs **********************************************/
     @apply relative;
   }
   
-  li:first-child {
-    @apply hidden;
+  // li:first-child {
+  //   @apply hidden;
 
-    @screen sm {
-      @apply inline-block;
-    }
-  }
+  //   @screen sm {
+  //     @apply inline-block;
+  //   }
+  // }
 
   .social a {
     @apply m-0;

@@ -14,8 +14,8 @@
 
         <a class="overflow-hidden mb-6 md:mb-8 block" href="{{post.permalink}}">
           {# <img class="lazyload" data-src="{{post.thumbnail ? post.thumbnail.src : theme.link~'/_resources/images/post-fallback.jpg' }}" alt="{{post.title}}"> #}
-          {% if post.thumbnail.width > 990 %}
-              <img class="lazyload" data-src="{{ post.thumbnail.src|resize(990, 0, 'center') }}" alt="{{ post.thumbnail.alt }}" />
+          {% if post.thumbnail.width > 2000 %}
+              <img class="lazyload" data-src="{{ post.thumbnail.src|resize(2000, 0, 'center') }}" alt="{{ post.thumbnail.alt }}" />
           {% else %}
               <img class="lazyload" data-src="{{ post.thumbnail.src }}" alt="{{ post.thumbnail.alt }}" />
           {% endif %}

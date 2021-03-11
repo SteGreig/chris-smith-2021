@@ -1,4 +1,4 @@
-<div class="w-full bg-center bg-cover hero h-screen mb-3 md:mb-6 lg:mb-8 flex">
+<div class="w-full bg-center bg-cover hero h-screen max-h-96 md:max-h-screen mb-3 md:mb-6 lg:mb-8 flex">
     {% set hero_small = post.thumbnail.src|resize('800') %}
     {% set hero_medium = post.thumbnail.src|resize('1200') %}
     {% set hero_large = post.thumbnail.src|resize('2000') %}
@@ -18,11 +18,11 @@
       }
     </style>
 
-    <div class="m-auto mb-10 flex flex-col items-center">
+    <div class="m-auto mb-6 lg:mb-10 flex flex-col items-center">
 
-      <img class="mb-10 max-w-48 lg:max-w-72" src="{{options.company_logo_alt.url}}" alt="Chris Smith Photography Logo"/>
+      <img class="mb-6 lg:mb-10 max-w-48 lg:max-w-60 2xl:max-w-72" src="{{options.company_logo_alt.url}}" alt="Chris Smith Photography Logo"/>
 
-      <a class="p-3 opacity-75 hover:opacity-100 animate-bounce" href="#header">{{fn('icon','chevron-double-down','text-4xl text-white')}}</a>
+      <a class="p-3 opacity-75 hover:opacity-100 animate-bounce" href="#header">{{fn('icon','chevron-double-down','text-3xl lg:text-4xl text-white')}}</a>
 
     </div>
 

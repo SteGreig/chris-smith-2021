@@ -1,5 +1,5 @@
 <div class="w-full pt-2 xl:px-10 2xl:py-5 flex">
-  <div class="w-full bg-center bg-cover hero h-screen flex">
+  <div class="w-full bg-center bg-cover hero h-screen max-h-96 md:max-h-screen flex">
       {% set hero_small = post.thumbnail.src|resize('800') %}
       {% set hero_medium = post.thumbnail.src|resize('1200') %}
       {% set hero_large = post.thumbnail.src|resize('2000') %}
