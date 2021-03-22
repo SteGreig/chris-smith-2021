@@ -12,6 +12,7 @@ wp-config.php
 
 # Ignore the uploads 'cause it's massive
 wp-content/uploads/*
+wp-content/gallery/*
 
 # ignore all files starting with . or ~
 .*
