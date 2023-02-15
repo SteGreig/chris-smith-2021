@@ -7,7 +7,11 @@ Defer scripts
 ======================================================================================================================== */
 function add_defer_attribute($tag, $handle) {
   // add script handles to the array below
-  $scripts_to_defer = array('production','adtrak-cookie','location-dynamics-front', 'svgxuse');
+  if(!is_admin) {
+    $scripts_to_defer = array('production','adtrak-cookie','contact-form-7', 'svgxuse','jquery-core');
+  } else {
+    $scripts_to_defer = [];
+  }
 
   foreach($scripts_to_defer as $defer_script) {
     if ($defer_script === $handle) {
@@ -33,6 +37,10 @@ function remove_unwanted_plugins() {
   }
   */
 
+  if (!is_page('contact')) {
+		wp_dequeue_script('contact-form-7');
+	}
+
   // Remove datepicker script - ENABLE if your form has a datepicker field!
   wp_dequeue_script('jquery-ui-datepicker');
 }
@@ -49,6 +57,9 @@ function my_deregister_styles() {
   wp_deregister_style('wp-block-library'); // Gutenberg related stylesheet
   wp_deregister_style( 'dashicons' );
   wp_deregister_style('fbrev_css');
+  if(!is_page('reviews')) {
+    wp_deregister_style('grw_css');
+  }
   if (!is_page('contact')) {
 		wp_deregister_style('contact-form-7');
 	}

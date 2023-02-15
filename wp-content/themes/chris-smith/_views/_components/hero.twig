@@ -1,29 +1,61 @@
-<div class="w-full bg-center bg-cover hero h-screen max-h-80 md:max-h-screen mb-3 md:mb-6 lg:mb-8 flex">
-    {% set hero_small = post.thumbnail.src|resize('800') %}
-    {% set hero_medium = post.thumbnail.src|resize('1200') %}
-    {% set hero_large = post.thumbnail.src|resize('2000') %}
-    <style>
+<div class="w-full bg-center hero h-screen max-h-80 md:max-h-screen mb-3 md:mb-6 lg:mb-8 flex relative overflow-hidden">
+
+  {% include "_components/picture.twig" with {
+    source: post.thumbnail.src,
+    lazyload: "false",
+    pictureClasses: 'absolute top-0 left-0 h-full object-cover',
+    breakpoints: {
+      "1200px" : {
+        w: 2000,
+        h: 1335,
+        crop: 'center'
+      },
+      "800px" : {
+        w: 1200,
+        h: 800,
+        crop: 'center'
+      },
+      "1px" : {
+        w: 800,
+        h: 534,
+        crop: 'center'
+      },
+    },
+    img: {
+      classes: 'w-full h-full object-cover',
+      w: 480,
+      h: 375,
+      crop: 'center',
+      width: '480',
+      height: '375',
+    }
+  }
+  %}
+  {# {% set hero_small = post.thumbnail.src|resize('800') %}
+  {% set hero_medium = post.thumbnail.src|resize('1200') %}
+  {% set hero_large = post.thumbnail.src|resize('2000') %}
+  <style>
+    .hero {
+      background-image: url('{{hero_small}}');
+    }
+    @media (min-width: 800px) {
       .hero {
-        background-image: url('{{hero_small}}');
+        background-image: url('{{hero_medium}}');
       }
-      @media (min-width: 800px) {
-        .hero {
-          background-image: url('{{hero_medium}}');
-        }
+    }
+    @media (min-width: 1200px) {
+      .hero {
+        background-image: url('{{hero_large}}');
       }
-      @media (min-width: 1200px) {
-        .hero {
-          background-image: url('{{hero_large}}');
-        }
-      }
-    </style>
+    }
+  </style> #}
 
-    <div class="m-auto mb-6 lg:mb-10 flex flex-col items-center">
+  <div class="m-auto mb-6 lg:mb-10 flex flex-col items-center relative z-10">
 
-      <img class="mb-6 lg:mb-10 max-w-48 lg:max-w-60 2xl:max-w-72" src="{{options.company_logo_alt.url}}" alt="Chris Smith Photography Logo"/>
+    <img class="mb-6 lg:mb-10 max-w-48 lg:max-w-60 2xl:max-w-72" src="{{options.company_logo_alt.url}}" alt="Chris Smith Photography Logo" width="360" height="137" />
 
-      <a class="p-3 opacity-75 hover:opacity-100 animate-bounce hidden md:block" href="#header">{{fn('icon','chevron-double-down','text-3xl lg:text-4xl text-white')}}</a>
+    <a class="p-3 opacity-75 hover:opacity-100 animate-bounce hidden md:block" href="#header">{{fn('icon','chevron-double-down','text-3xl lg:text-4xl text-white')}}</a>
 
-    </div>
+  </div>
 
 </div>

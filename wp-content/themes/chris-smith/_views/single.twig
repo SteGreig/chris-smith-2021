@@ -22,7 +22,7 @@
 
       <article class="copy lg:text-sm {{is_private_gal ? 'text-center w-full' : ''}}">
         
-        <h1 class="mb-4 lg:mb-8">{{post.title}}</h1>
+        <h1 class="mb-4 lg:mb-8 {{post.title_alignment == "center" ? 'text-center' : ''}}">{{post.title}}</h1>
         
         {{post.content}}
         
@@ -30,9 +30,11 @@
 
     </div>
 
+    {% if nggid %}
     <div class=" max-w-screen-3xl mx-auto flex justify-center">
       {{ function('do_shortcode', '[nggallery id='~nggid~']') }}
     </div>
+    {% endif %}
 
     <div class="container max-w-screen-md flex-wrap flex-grow my-8 lg:flex lg:my-16 xl:my-20">
 

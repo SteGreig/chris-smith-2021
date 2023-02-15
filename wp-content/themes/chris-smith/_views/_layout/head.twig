@@ -9,9 +9,6 @@
 
 		{% block htmlheader %}
 
-      <link rel="preconnect" href="https://fonts.gstatic.com">
-      <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&family=Oswald:wght@300;500&display=swap" rel="stylesheet">
-
 			{% if (site.url == "http://localhost:3000" or site.url == "http://chris-smith-2021.vm") %}
 				<link rel="stylesheet" href="{{ theme.link ~ '/dist/main.min.css' }}">
 			{% else %}
@@ -21,6 +18,18 @@
 			{% endif %}
 
 		{% endblock %}
+
+    <link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin />
+
+    <link rel="preload"
+        as="style"
+        href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&family=Oswald:wght@300;500&display=swap" />
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&family=Oswald:wght@300;500&display=swap"
+        media="print" onload="this.media='all'" />
 
   {% if options.google_analytics %}
     {{ options.google_analytics}}

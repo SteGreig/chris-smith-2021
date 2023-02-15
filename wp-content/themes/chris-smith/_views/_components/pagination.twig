@@ -3,7 +3,7 @@
     {% if posts.pagination.prev %}
       <a href="{{posts.pagination.prev.link}}" class="prev md:mr-4 underline text-sm {{posts.pagination.prev.link|length ? '' : 'invisible'}}">Prev</a>
       {% endif %}
-      <ul class="inline-flex flex-wrap justify-center">
+      <ul class="flex-wrap justify-center hidden lg:inline-flex">
         {% for page in posts.pagination.pages %}
         <li class="flex">
           {% if page.link %}
