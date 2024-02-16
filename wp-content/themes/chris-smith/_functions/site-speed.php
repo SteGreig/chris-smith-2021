@@ -7,7 +7,7 @@ Defer scripts
 ======================================================================================================================== */
 function add_defer_attribute($tag, $handle) {
   // add script handles to the array below
-  if(!is_admin) {
+  if(!is_admin()) {
     $scripts_to_defer = array('production','adtrak-cookie','contact-form-7', 'svgxuse','jquery-core');
   } else {
     $scripts_to_defer = [];
