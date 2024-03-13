@@ -54,11 +54,11 @@ if(is_singular('post')) {
     }
 
     //display the result
-    //print_r($result);
-    //echo $result[0][id];
+    //print_r($result[0]);
+    //echo $result[0]['id'];
   }
 
-  $context['nggid'] = $result[0][id];
+  $context['nggid'] = $result ? $result[0]['id'] : '';
 }
 
 
