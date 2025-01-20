@@ -12,7 +12,7 @@
 
       <article class="md:px-8 lg:px-16 py-8 sm:py-10 md:py-12 2xl:py-16 flex flex-col items-center">
 
-        <a class="overflow-hidden mb-6 md:mb-8 block" href="{{post.permalink}}">
+        <a class="overflow-hidden mb-6 md:mb-8 block" href="{{ function("get_permalink", post.ID)}}">
           {# <img class="lazyload" data-src="{{post.thumbnail ? post.thumbnail.src : theme.link~'/_resources/images/post-fallback.jpg' }}" alt="{{post.title}}"> #}
           {% if post.thumbnail.width > 2000 %}
               <img class="lazyload" data-src="{{ post.thumbnail.src|resize(2000, 0, 'center') }}" alt="{{ post.thumbnail.alt }}" />
