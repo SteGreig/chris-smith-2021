@@ -4,9 +4,9 @@
 
     <div class="hero w-full bg-center bg-cover">
 
-      {% set hero_small = post.thumbnail.src|resize('800')|default(Image(274038)) %}
-      {% set hero_medium = post.thumbnail.src|resize('1200')|default(Image(274038)) %}
-      {% set hero_large = post.thumbnail.src|resize('1900')|default(Image(274038)) %}
+      {% set hero_small = post.thumbnail.src|resize('800')|default(Image(352460)) %}
+      {% set hero_medium = post.thumbnail.src|resize('1200')|default(Image(352460)) %}
+      {% set hero_large = post.thumbnail.src|resize('1900')|default(Image(352460)) %}
       <style>
         .hero {
           background-image: url('{{hero_small}}');
